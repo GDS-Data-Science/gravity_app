@@ -1,0 +1,14 @@
+
+GravityApp/.Rhistory
+.Rhistory
+GravityApp/www/chord_diagram.png
+Scripts.Rproj
+StataCode/01_Country_UN_BASE.do
+StataCode/02_Individual_DataBase_PF.do
+StataCode/03_Merge_PF.do
+StataCode/04_Estimation_2019.do
+StataCode/04_Estimation_2019_NEW.do
+*.do
+*.csv
+*.Rdata
+GravityApp/www/bootstrap.css
