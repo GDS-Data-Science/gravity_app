@@ -81,9 +81,9 @@ ColourScal ='d3.scaleOrdinal() .range([ "#000000", "#faeb00", "#338ec9", "#e7345
 # function for bar chart
 bar_plot <- function( data ){
    g <- ggplot( data ) +
-         geom_bar( aes( x = years, y = var ), 
+         geom_bar( aes( x = year, y = var ), 
                    stat = "identity", fill = "#057fab" ) +
-         geom_text( aes( x = years, y = var, label = var ),
+         geom_text( aes( x = year, y = var, label = var ),
                     position = position_stack( vjust = 0.5 ),
                     color = "white" ) +
          labs( y = "", x = "" ) +
@@ -162,8 +162,10 @@ ui <- navbarPage(
                                            plotlyOutput( "bar_plot", height = "550px" )), 
                                  tabPanel( "2021", 
                                            sankeyNetworkOutput( "sankey21", height = "600px" )), 
-                                 tabPanel( "2022", tableOutput("checker")),
-                                 tabPanel( "2023" )
+                                 tabPanel( "2022", 
+                                           sankeyNetworkOutput( "sankey22", height = "600px" )),
+                                 tabPanel( "2023", 
+                                           sankeyNetworkOutput( "sankey23", height = "600px" ))
                               )
                       ),
                       column( 3, 
@@ -397,49 +399,75 @@ server <- function( input, output, session ) {
    
    
    ### reactive newdata
-   newdata <- reactive({
-        newdata <- lapply( impu21, new_data )
-   })
+   # newdata <- reactive({
+   #      newdata <- lapply( impu21, new_data )
+   # })
    
                                  
    ### predictions
    predictions <- reactive({
         flow_predictions <- mapply( function( x, y ) predict( x, newdata = y, type = "response" ),
-                                    x = est_models, y = newdata())
-        round( rowMeans( flow_predictions ), 0 )
+                                    x = est_models, y = impu21 )
+        #round( rowMeans( flow_predictions ), 0 )
+        pre_newarrival <- data.frame( iso_o = impu21[[1]]$iso_o, 
+                                      iso_d = impu21[[1]]$iso_d, 
+                                      year = impu21[[1]]$year,
+                                      var = round( rowMeans( flow_predictions ), 0 ))
+        pre_newarrival
    })
    
-
+   ## calculate year totals for iso_d
+   iso_d_totals <- reactive({
+       predictions() %>% 
+       group_by( iso_d, year ) %>% 
+       summarise( total = sum( var ))
+   })
+   
    ## create bar plot
    output$bar_plot <- renderPlotly({
-       if( mean( names( predictions()) == iso_orig()) == 0 ){
-           shiny::validate( "No data available for this country pair. Please select another country pair." )
+      # browser()
+      
+      data_bar <- predictions() %>% 
+                  filter( iso_o == iso_orig() & iso_d == iso_host() & year %in% c( 2021:2023 ))
+      if( nrow( data_bar ) == 0 ){
+          shiny::validate( "No data available for this country pair. Please select another country pair." )
       }
 
-      # create data set for bar plot
-      data_bar <- data.frame( years = c( 2021:2024 ),
-                              var = predictions()[ names( predictions()) == iso_orig()])
-      data_bar <- data_bar[ data_bar$years %in% c( 2021:2023), ]
-      # plot data
+      # # create data set for bar plot
+      # data_bar <- data.frame( years = c( 2021:2024 ),
+      #                         var = predictions()[ names( predictions()) == iso_orig()])
+      # data_bar <- data_bar[ data_bar$years %in% c( 2021:2023), ]
+      # # plot data
       bar_plot( data_bar )
    })
 
    ### data Sankey plot
    sankey_dat <- reactive({
-      data_sankey <- data.frame( years = rep( 2021:2024, n = length( predictions()/4)),
-                                 iso_o = names( predictions()),
-                                 iso_d = iso_host(),
-                                 var = predictions())
+      data_sankey <- predictions() %>% 
+                     filter( iso_d == iso_host() & year %in% c( 2021:2023 ))
+      # data_sankey <- data.frame( years = rep( 2021:2024, n = length( predictions()/4)),
+      #                            iso_o = names( predictions()),
+      #                            iso_d = iso_host(),
+      #                            var = predictions())
    })
-
+   
    ### create Sankey plot 2021
    output$sankey21 <- renderSankeyNetwork({
+      #browser()
       # 21 data
-      data_sankey_21 <- sankey_dat() %>%
-                        filter( years == 2021 ) %>%
-                        arrange( desc( var)) %>%
-                        top_n( 5 ) %>%
-                        select( -years )
+      data_sankey_21_max  <- sankey_dat() %>%
+                             filter( year == 2021 ) %>%
+                             top_n( 4 ) %>%
+                             select( -year )
+      
+      if( !( iso_orig() %in% data_sankey_21_max$iso_o )){
+         data_sankey_21 <- sankey_dat() %>%
+                           filter( year == 2021 & iso_o == iso_orig()) %>%
+                           bind_rows( data_sankey_21_max )
+      } else{
+         data_sankey_21 <- data_sankey_21_max 
+      }
+      
       # nodes data frame
       nodes <- data.frame( name = c( as.character( data_sankey_21$iso_o ),
                                      as.character( data_sankey_21$iso_d ))
@@ -455,6 +483,93 @@ server <- function( input, output, session ) {
                      sinksRight = FALSE, colourScale = ColourScal,
                      nodeWidth = 40, fontSize = 13, nodePadding = 20 )
    })
+   
+   ### create Sankey plot 2022
+   output$sankey22 <- renderSankeyNetwork({
+      #browser()
+      # 22 data
+      data_sankey_22_max  <- sankey_dat() %>%
+         filter( year == 2022 ) %>%
+         top_n( 4 ) %>%
+         select( -year )
+      
+      if( !( iso_orig() %in% data_sankey_22_max$iso_o )){
+         data_sankey_22_rest <- sankey_dat() %>% 
+            filter( iso_o != iso_orig() & !( iso_o %in% data_sankey_22_max$iso_o )) %>% 
+            summarise( var = sum( var ), iso_o = "REST", iso_d = iso_host())
+         
+         data_sankey_22 <- sankey_dat() %>%
+            filter( year == 2022 & iso_o == iso_orig()) %>%
+            bind_rows( data_sankey_22_max ) %>% 
+            bind_rows( data_sankey_22_rest )
+      } else{
+         data_sankey_22_rest <- sankey_dat() %>% 
+            filter( !( iso_o %in% data_sankey_22_max$iso_o )) %>% 
+            summarise( var = sum( var ), iso_o = "REST", iso_d = iso_host())
+         
+         data_sankey_22 <- data_sankey_22_max %>% 
+            bind_rows( data_sankey_22_rest )
+      }
+      
+      # nodes data frame
+      nodes <- data.frame( name = c( as.character( data_sankey_22$iso_o ),
+                                     as.character( data_sankey_22$iso_d ))
+                           %>% unique())
+      # id connections
+      data_sankey_22$IDsource = match( data_sankey_22$iso_o, nodes$name ) - 1
+      data_sankey_22$IDtarget = match( data_sankey_22$iso_d, nodes$name ) - 1
+      
+      # plot network
+      sankeyNetwork( Links = data_sankey_22, Nodes = nodes,
+                     Source = "IDsource", Target = "IDtarget",
+                     Value = "var", NodeID = "name",
+                     sinksRight = FALSE, colourScale = ColourScal,
+                     nodeWidth = 40, fontSize = 13, nodePadding = 20 )
+   })
+   
+   ### create Sankey plot 2023
+   output$sankey23 <- renderSankeyNetwork({
+      #browser()
+      # 23 data
+      data_sankey_23_max  <- sankey_dat() %>%
+         filter( year == 2023 ) %>%
+         top_n( 4 ) %>%
+         select( -year )
+      
+      if( !( iso_orig() %in% data_sankey_23_max$iso_o )){
+         data_sankey_23_rest <- sankey_dat() %>% 
+            filter( iso_o != iso_orig() & !( iso_o %in% data_sankey_23_max$iso_o )) %>% 
+            summarise( var = sum( var ), iso_o = "REST", iso_d = iso_host())
+         
+         data_sankey_23 <- sankey_dat() %>%
+            filter( year == 2023 & iso_o == iso_orig()) %>%
+            bind_rows( data_sankey_23_max ) %>% 
+            bind_rows( data_sankey_23_rest )
+      } else{
+         data_sankey_23_rest <- sankey_dat() %>% 
+            filter( !( iso_o %in% data_sankey_23_max$iso_o )) %>% 
+            summarise( var = sum( var ), iso_o = "REST", iso_d = iso_host())
+         
+         data_sankey_23 <- data_sankey_23_max %>% 
+            bind_rows( data_sankey_23_rest )
+      }
+      
+      # nodes data frame
+      nodes <- data.frame( name = c( as.character( data_sankey_23$iso_o ),
+                                     as.character( data_sankey_23$iso_d ))
+                           %>% unique())
+      # id connections
+      data_sankey_23$IDsource = match( data_sankey_23$iso_o, nodes$name ) - 1
+      data_sankey_23$IDtarget = match( data_sankey_23$iso_d, nodes$name ) - 1
+      
+      # plot network
+      sankeyNetwork( Links = data_sankey_23, Nodes = nodes,
+                     Source = "IDsource", Target = "IDtarget",
+                     Value = "var", NodeID = "name",
+                     sinksRight = FALSE, colourScale = ColourScal,
+                     nodeWidth = 40, fontSize = 13, nodePadding = 20 )
+   })
+   
  
 ################################ download tab ##################################
    
