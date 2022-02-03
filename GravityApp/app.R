@@ -99,6 +99,26 @@ bar_plot <- function( data ){
    ggplotly( g, tooltip = c( "text" ))
 }
 
+#=========================== function line plot ================================
+
+# function line plot 
+line_plot <- function( data ){
+   g <- ggplot( data, aes( x = year, y = var )) +
+        geom_line( color = "#057fab", size = 1 ) +
+        geom_ribbon(aes( ymin = low, ymax = high ), alpha = 0.1 ) +    
+        labs( y = "", x = "" ) +
+        theme_minimal() +
+        theme( axis.line.x = element_blank(), 
+               axis.ticks.x = element_blank(), 
+               axis.line.y = element_blank(), 
+               axis.ticks.y = element_blank(), 
+               axis.text.y = element_blank()) +
+        theme( plot.background = element_rect( fill = "#F5F5F5", color = "#F5F5F5" ),
+               panel.background = element_rect( fill = "#F5F5F5", color = "#F5F5F5" ))
+   
+   ggplotly( g, tooltip = c( "text" ))
+}
+
 
 ################################################################################
 ################################################################################
@@ -460,13 +480,24 @@ server <- function( input, output, session ) {
                              top_n( 4 ) %>%
                              select( -year )
       
+      iso_d_totals <- iso_d_totals() %>%
+                      filter( iso_d == iso_host() & year == 2021 )
+      
       if( !( iso_orig() %in% data_sankey_21_max$iso_o )){
          data_sankey_21 <- sankey_dat() %>%
                            filter( year == 2021 & iso_o == iso_orig()) %>%
-                           bind_rows( data_sankey_21_max )
+                           select( -year ) %>%
+                           bind_rows( data_sankey_21_max )  
       } else{
          data_sankey_21 <- data_sankey_21_max 
       }
+      
+      tmp_total <- iso_d_totals$total - sum( data_sankey_21$var ) 
+      
+      data_sankey_21 <- data_sankey_21 %>%
+                        add_row( iso_o = "REST",
+                                 iso_d = iso_host(),
+                                 var =  tmp_total )
       
       # nodes data frame
       nodes <- data.frame( name = c( as.character( data_sankey_21$iso_o ),
@@ -493,23 +524,24 @@ server <- function( input, output, session ) {
          top_n( 4 ) %>%
          select( -year )
       
+      iso_d_totals <- iso_d_totals() %>%
+         filter( iso_d == iso_host() & year == 2022 )
+      
       if( !( iso_orig() %in% data_sankey_22_max$iso_o )){
-         data_sankey_22_rest <- sankey_dat() %>% 
-            filter( iso_o != iso_orig() & !( iso_o %in% data_sankey_22_max$iso_o )) %>% 
-            summarise( var = sum( var ), iso_o = "REST", iso_d = iso_host())
-         
          data_sankey_22 <- sankey_dat() %>%
             filter( year == 2022 & iso_o == iso_orig()) %>%
-            bind_rows( data_sankey_22_max ) %>% 
-            bind_rows( data_sankey_22_rest )
+            select( -year ) %>%
+            bind_rows( data_sankey_22_max )  
       } else{
-         data_sankey_22_rest <- sankey_dat() %>% 
-            filter( !( iso_o %in% data_sankey_22_max$iso_o )) %>% 
-            summarise( var = sum( var ), iso_o = "REST", iso_d = iso_host())
-         
-         data_sankey_22 <- data_sankey_22_max %>% 
-            bind_rows( data_sankey_22_rest )
+         data_sankey_22 <- data_sankey_22_max 
       }
+      
+      tmp_total <- iso_d_totals$total - sum( data_sankey_22$var ) 
+      
+      data_sankey_22 <- data_sankey_22 %>%
+         add_row( iso_o = "REST",
+                  iso_d = iso_host(),
+                  var =  tmp_total )
       
       # nodes data frame
       nodes <- data.frame( name = c( as.character( data_sankey_22$iso_o ),
@@ -536,23 +568,24 @@ server <- function( input, output, session ) {
          top_n( 4 ) %>%
          select( -year )
       
+      iso_d_totals <- iso_d_totals() %>%
+         filter( iso_d == iso_host() & year == 2023 )
+      
       if( !( iso_orig() %in% data_sankey_23_max$iso_o )){
-         data_sankey_23_rest <- sankey_dat() %>% 
-            filter( iso_o != iso_orig() & !( iso_o %in% data_sankey_23_max$iso_o )) %>% 
-            summarise( var = sum( var ), iso_o = "REST", iso_d = iso_host())
-         
          data_sankey_23 <- sankey_dat() %>%
             filter( year == 2023 & iso_o == iso_orig()) %>%
-            bind_rows( data_sankey_23_max ) %>% 
-            bind_rows( data_sankey_23_rest )
+            select( -year ) %>%
+            bind_rows( data_sankey_23_max )  
       } else{
-         data_sankey_23_rest <- sankey_dat() %>% 
-            filter( !( iso_o %in% data_sankey_23_max$iso_o )) %>% 
-            summarise( var = sum( var ), iso_o = "REST", iso_d = iso_host())
-         
-         data_sankey_23 <- data_sankey_23_max %>% 
-            bind_rows( data_sankey_23_rest )
+         data_sankey_23 <- data_sankey_23_max 
       }
+      
+      tmp_total <- iso_d_totals$total - sum( data_sankey_23$var ) 
+      
+      data_sankey_23 <- data_sankey_23 %>%
+         add_row( iso_o = "REST",
+                  iso_d = iso_host(),
+                  var =  tmp_total )
       
       # nodes data frame
       nodes <- data.frame( name = c( as.character( data_sankey_23$iso_o ),
@@ -570,7 +603,8 @@ server <- function( input, output, session ) {
                      nodeWidth = 40, fontSize = 13, nodePadding = 20 )
    })
    
- 
+   
+
 ################################ download tab ##################################
    
    ### calculate stock data 
