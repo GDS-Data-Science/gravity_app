@@ -28,6 +28,7 @@ library( utils )
 
 dat <- read.csv( "input_data/CountriesRegions.csv" )
 load( "input_data/impuData21.Rdata" )
+load( "input_data/impuData15.Rdata" )
 load( "input_data/estimations.Rdata" )
 
 #============================ generate data set ================================
@@ -105,7 +106,8 @@ bar_plot <- function( data ){
 line_plot <- function( data ){
    g <- ggplot( data, aes( x = year, y = var )) +
         geom_line( color = "#057fab", size = 1 ) +
-        geom_ribbon(aes( ymin = low, ymax = high ), alpha = 0.1 ) +    
+        #geom_ribbon( aes( ymin = low, ymax = high ), alpha = 0.1 ) + 
+        geom_vline( xintercept = 2021, color = "red", size = 1.3 ) +
         labs( y = "", x = "" ) +
         theme_minimal() +
         theme( axis.line.x = element_blank(), 
@@ -426,7 +428,9 @@ server <- function( input, output, session ) {
                                  
    ### predictions
    predictions <- reactive({
-        flow_predictions <- mapply( function( x, y ) predict( x, newdata = y, type = "response" ),
+        flow_predictions <- mapply( function( x, y ) 
+                                    predict( x, newdata = y, type = "response" ), 
+                                             #se.fit = TRUE, interval="confidence" ),
                                     x = est_models, y = impu21 )
         #round( rowMeans( flow_predictions ), 0 )
         pre_newarrival <- data.frame( iso_o = impu21[[1]]$iso_o, 
@@ -445,8 +449,6 @@ server <- function( input, output, session ) {
    
    ## create bar plot
    output$bar_plot <- renderPlotly({
-      # browser()
-      
       data_bar <- predictions() %>% 
                   filter( iso_o == iso_orig() & iso_d == iso_host() & year %in% c( 2021:2023 ))
       if( nrow( data_bar ) == 0 ){
@@ -473,7 +475,6 @@ server <- function( input, output, session ) {
    
    ### create Sankey plot 2021
    output$sankey21 <- renderSankeyNetwork({
-      #browser()
       # 21 data
       data_sankey_21_max  <- sankey_dat() %>%
                              filter( year == 2021 ) %>%
@@ -517,7 +518,6 @@ server <- function( input, output, session ) {
    
    ### create Sankey plot 2022
    output$sankey22 <- renderSankeyNetwork({
-      #browser()
       # 22 data
       data_sankey_22_max  <- sankey_dat() %>%
          filter( year == 2022 ) %>%
@@ -561,7 +561,6 @@ server <- function( input, output, session ) {
    
    ### create Sankey plot 2023
    output$sankey23 <- renderSankeyNetwork({
-      #browser()
       # 23 data
       data_sankey_23_max  <- sankey_dat() %>%
          filter( year == 2023 ) %>%
