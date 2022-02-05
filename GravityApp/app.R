@@ -117,7 +117,7 @@ line_plot <- function( data ){
         theme( plot.background = element_rect( fill = "#F5F5F5", color = "#F5F5F5" ),
                panel.background = element_rect( fill = "#F5F5F5", color = "#F5F5F5" ))
    
-   ggplotly( g, tooltip = c( "text" ))
+   ggplotly( g, dynamicTicks = TRUE) %>% layout(hovermode = "x")
 }
 
 
