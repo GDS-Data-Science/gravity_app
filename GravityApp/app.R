@@ -107,14 +107,13 @@ line_plot <- function( data ){
    g <- ggplot( data, aes( x = year, y = var )) +
         geom_line( color = "#057fab", size = 1 ) +
         #geom_ribbon( aes( ymin = low, ymax = high ), alpha = 0.1 ) + 
-        geom_vline( xintercept = 2021, color = "red", size = 1.3 ) +
+        geom_vline( xintercept = 2020, color = "red", size = 1.3 ) +
         labs( y = "", x = "" ) +
         theme_minimal() +
         theme( axis.line.x = element_blank(), 
                axis.ticks.x = element_blank(), 
                axis.line.y = element_blank(), 
-               axis.ticks.y = element_blank(), 
-               axis.text.y = element_blank()) +
+               axis.ticks.y = element_blank()) +
         theme( plot.background = element_rect( fill = "#F5F5F5", color = "#F5F5F5" ),
                panel.background = element_rect( fill = "#F5F5F5", color = "#F5F5F5" ))
    
@@ -447,30 +446,28 @@ server <- function( input, output, session ) {
        summarise( total = sum( var ))
    })
    
-   ## create bar plot
+   ## create line plot
    output$bar_plot <- renderPlotly({
-      data_bar <- predictions() %>% 
-                  filter( iso_o == iso_orig() & iso_d == iso_host() & year %in% c( 2021:2023 ))
-      if( nrow( data_bar ) == 0 ){
+      data_pred <- predictions() %>% 
+                   filter( iso_o == iso_orig() & iso_d == iso_host() & year %in% c( 2021:2023 ))  
+                  
+      if( nrow( data_pred ) == 0 ){
           shiny::validate( "No data available for this country pair. Please select another country pair." )
       }
-
-      # # create data set for bar plot
-      # data_bar <- data.frame( years = c( 2021:2024 ),
-      #                         var = predictions()[ names( predictions()) == iso_orig()])
-      # data_bar <- data_bar[ data_bar$years %in% c( 2021:2023), ]
-      # # plot data
-      bar_plot( data_bar )
+      
+      data_line <- impu15[[1]] %>% 
+                   select( iso_o, iso_d, year, newarrival ) %>% 
+                   filter( iso_o == iso_orig() & iso_d == iso_host()) %>%
+                   rename( var = newarrival ) %>% 
+                   bind_rows( data_pred )
+      
+      line_plot( data_line )
    })
 
    ### data Sankey plot
    sankey_dat <- reactive({
       data_sankey <- predictions() %>% 
                      filter( iso_d == iso_host() & year %in% c( 2021:2023 ))
-      # data_sankey <- data.frame( years = rep( 2021:2024, n = length( predictions()/4)),
-      #                            iso_o = names( predictions()),
-      #                            iso_d = iso_host(),
-      #                            var = predictions())
    })
    
    ### create Sankey plot 2021
