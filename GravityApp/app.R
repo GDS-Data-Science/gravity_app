@@ -17,11 +17,13 @@ library( FENmlm )
 library( haven )
 library( networkD3 )
 library( plotly )
+library( purrr )
 library( readr )
 library( readxl )
 library( shiny )
 library( shinythemes )
 library( shinyWidgets )
+library( tidyr )
 library( utils )
 
 #============================== read in data ===================================
@@ -30,6 +32,7 @@ dat <- read.csv( "input_data/CountriesRegions.csv" )
 load( "input_data/impuData21.Rdata" )
 load( "input_data/impuData15.Rdata" )
 load( "input_data/estimations.Rdata" )
+load( "input_data/stock_calc.Rdata" )
 
 #============================ generate data set ================================
 
@@ -180,7 +183,7 @@ ui <- navbarPage(
                       column( 6,
                               tabsetPanel( type = "pills", 
                                  tabPanel( "Summary", 
-                                           plotlyOutput( "bar_plot", height = "550px" )), 
+                                           plotlyOutput( "line_plot", height = "550px" )), 
                                  tabPanel( "2021", 
                                            sankeyNetworkOutput( "sankey21", height = "600px" )), 
                                  tabPanel( "2022", 
@@ -447,7 +450,7 @@ server <- function( input, output, session ) {
    })
    
    ## create line plot
-   output$bar_plot <- renderPlotly({
+   output$line_plot <- renderPlotly({
       data_pred <- predictions() %>% 
                    filter( iso_o == iso_orig() & iso_d == iso_host() & year %in% c( 2021:2023 ))  
                   
@@ -604,7 +607,46 @@ server <- function( input, output, session ) {
 ################################ download tab ##################################
    
    ### calculate stock data 
-   
+   stock <- reactive({
+      # create host country sub set and nest grouped data frame 
+      dat_stock <- dat_stock %>% 
+                   left_join( predictions(), by = c( "iso_o", "iso_d", "year" )) %>% 
+                   filter( iso_d == iso_host() & year %in% c( 2020:2023 )) %>% 
+                   rename( predarrival = var ) %>% 
+                   group_by( iso_o ) %>% 
+                   nest()
+      # function to calculate new refugee, asylum seeker and vda stocks
+      stock_calc <- function( df ){        
+         within( df, {
+               for( i in 2:4 ){
+               # refugees 
+               ref[i] <- round( ref[i-1] + predarrival[i] * index0asylum[i] +
+                       ( predarrival[i] * ( 1 - index0asylum[i]) * ( 1 - percVDA[i-1]) +
+                         asy[i-1]) * deci_rate_d[i] * deci_posi_rate_o[i], 0 )
+               # asylum seekers 
+               asy[i] <- round( ( asy[i-1] + predarrival[i] * ( 1 - index0asylum[i]) * ( 1 - percVDA[i-1] )) *
+                         ( 1 - deci_rate_d[i]), 0 )
+               # venezuelans
+               vda[i] <- round( vda[i-1] + predarrival[i] * percVDA[i-1], 0 )
+               # percent venezuelans 
+               percVDA[i] <- vda[i]/predarrival[i]
+            }
+         })
+      }
+      # calculate stocks 
+      dat_stock$data <- lapply( dat_stock$data, stock_calc ) 
+      # unlist  
+      dat_stock <- unnest( dat_stock, cols = c( data ))
+      # select variables and rename 
+      dat_stock %>% select( iso_o, iso_d, year, ref, asy, vda ) %>% 
+                    rename( country_origin = iso_o, 
+                            country_host = iso_d, 
+                            refugee_stocks = ref, 
+                            asylum_stocks = asy, 
+                            venezuelans_stocks = vda ) %>% 
+                    as.data.frame()
+      
+   })
    
 
    ### download stock data    
@@ -613,13 +655,13 @@ server <- function( input, output, session ) {
          paste( "stock_data", ".csv", sep = "" )
       },
       content = function(file) {
-         write.csv( stock, file )
+         write.csv( stock(), file )
       }) 
    
    ### table display risk data  
    output$rawtable <- renderPrint({
       orig <- options( width = 1000 )
-      print( tail( stock, input$maxrows ), row.names = FALSE)
+      print( tail( stock(), input$maxrows ), row.names = FALSE)
       options( orig )
    })
    

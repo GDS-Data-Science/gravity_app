@@ -12,3 +12,4 @@ StataCode/04_Estimation_2019_NEW.do
 *.csv
 *.Rdata
 GravityApp/www/bootstrap.css
+.Rproj.user
