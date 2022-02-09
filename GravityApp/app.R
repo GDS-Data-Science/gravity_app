@@ -40,19 +40,19 @@ load( "input_data/stock_calc.Rdata" )
 dat_o <- subset( dat, iso3 %in% impu21[[1]]$iso_o )
 dat_d <- subset( dat, iso3 %in% impu21[[1]]$iso_d )
 
-# generate factor variables 
-for( i in 1:5 ){
-   impu21[[i]] <- within( impu21[[i]], {
-      CL_d_factor <- cut( CL_d, c( 1, 3, 6, 8 ), right = FALSE, 
-                          labels = c( "free", "partfree", "nofree" ))
-      CL_o_factor <- cut( CL_o, c( 1, 3, 6, 8 ), right = FALSE, 
-                          labels = c( "free", "partfree", "nofree" ))
-      PR_d_factor <- cut( PR_d, c( 1, 3, 6, 8 ), right = FALSE, 
-                          labels = c( "free", "partfree", "nofree" ))
-      PR_o_factor <- cut( PR_o, c( 1, 3, 6, 8 ), right = FALSE, 
-                          labels = c( "free", "partfree", "nofree" ))
-   })
-}
+# # generate factor variables 
+# for( i in 1:5 ){
+#    impu21[[i]] <- within( impu21[[i]], {
+#       CL_d_factor <- cut( CL_d, c( 1, 3, 6, 8 ), right = FALSE, 
+#                           labels = c( "free", "partfree", "nofree" ))
+#       CL_o_factor <- cut( CL_o, c( 1, 3, 6, 8 ), right = FALSE, 
+#                           labels = c( "free", "partfree", "nofree" ))
+#       PR_d_factor <- cut( PR_d, c( 1, 3, 6, 8 ), right = FALSE, 
+#                           labels = c( "free", "partfree", "nofree" ))
+#       PR_o_factor <- cut( PR_o, c( 1, 3, 6, 8 ), right = FALSE, 
+#                           labels = c( "free", "partfree", "nofree" ))
+#    })
+# }
 
 # country library drop down menu
 d_americas <- dat_d$gis_name[ dat_d$main_office == "Americas " ]
@@ -162,21 +162,23 @@ ui <- navbarPage(
                                                choices = c( -25, -15, -10, -7, -5, -4, -3, -2, -1.5, -1, -0.5, -0.25, 0, 
                                                             0.25, 0.5, 1, 1.5, 2, 3, 4, 5, 7, 10, 15, 25 ), 
                                                selected = 0, grid = FALSE ),
-                              br(), 
-                              fluidRow( 
-                                    column( 6,  
-                                         radioButtons( "civlibO", "Civil Liberty", 
-                                                       choices = c( "Free" = "free", 
-                                                                    "Partly free" = "partfree", 
-                                                                    "Not free" = "nofree" ), 
-                                                       selected = "free" )), 
-                                    column( 6, 
-                                         radioButtons( "polRO", "Political Rights", 
-                                                       choices = c( "Free" = "free", 
-                                                                    "Partly free" = "partfree", 
-                                                                    "Not free" = "nofree" ), 
-                                                       selected = "free" ))), 
-                              br(),
+                              selectInput( "civlibO", "Civil liberty on 1-7 scale", 
+                                           choices = c( "1 Very free" = 1, 
+                                                        "2 Free" = 2, 
+                                                        "3 Less free" = 3, 
+                                                        "4 Moderately free" = 4,
+                                                        "5 Partly free" = 5, 
+                                                        "6 Unfree" = 6, 
+                                                        "7 Very unfree" = 7 )), 
+                                     
+                               selectInput( "polRO", "Political rights on 1-7 scale", 
+                                           choices = c( "1 Very free" = 1, 
+                                                        "2 Free" = 2, 
+                                                        "3 Less free" = 3, 
+                                                        "4 Moderately free" = 4,
+                                                        "5 Partly free" = 5, 
+                                                        "6 Unfree" = 6, 
+                                                        "7 Very unfree" = 7 )), 
                               selectInput( "year", "Select year", 
                                            choices = c( 2021, 2022, 2023 ))
                               ),
@@ -211,21 +213,22 @@ ui <- navbarPage(
                                                choices = c( -25, -15, -10, -7, -5, -4, -3, -2, -1.5, -1, -0.5, -0.25, 0, 
                                                             0.25, 0.5, 1, 1.5, 2, 3, 4, 5, 7, 10, 15, 25 ), 
                                                selected = 0, grid = FALSE ), 
-                              br(), 
-                              fluidRow( 
-                                 column( 6,  
-                                         radioButtons( "civlibH", "Civil Liberty", 
-                                                       choices = c( "Free" = "free", 
-                                                                    "Partly free" = "partfree", 
-                                                                    "Not free" = "nofree" ), 
-                                                       selected = "free" )), 
-                                 column( 6, 
-                                         radioButtons( "polRH", "Political Rights", 
-                                                       choices = c( "Free" = "free", 
-                                                                    "Partly free" = "partfree", 
-                                                                    "Not free" = "nofree" ), 
-                                                       selected = "free" ))
-                              ), # end fluidrow2
+                              selectInput( "civlibH", "Civil liberty on 1-7 scale", 
+                                             choices = c( "1 Very free" = 1, 
+                                                          "2 Free" = 2, 
+                                                          "3 Less free" = 3, 
+                                                          "4 Moderately free" = 4,
+                                                          "5 Partly free" = 5, 
+                                                          "6 Unfree" = 6, 
+                                                          "7 Very unfree" = 7 )), 
+                              selectInput( "polRH", "Political rights on 1-7 scale", 
+                                             choices = c( "1 Very free" = 1, 
+                                                          "2 Free" = 2, 
+                                                          "3 Less free" = 3, 
+                                                          "4 Moderately free" = 4,
+                                                          "5 Partly free" = 5, 
+                                                          "6 Unfree" = 6, 
+                                                          "7 Very unfree" = 7 )), 
                               checkboxInput( "temAsyl", "Temporary Asylum" ),
                          ) # end column
                    ), # end fluidrow   
@@ -327,51 +330,64 @@ server <- function( input, output, session ) {
 ################################ Simulation tab ################################  
 
    ## interactive filter function      
-   new_data <- function( dt ){
-      nDat <- filter( dt, iso_d == iso_host() )
+   new_data <- function( nDat ){
       # modify dead and dead_log
-      nDat$dead_d[ nDat$year >= input$year ] <- ifelse( input$fatalH > 100, 0, 1 )
-      nDat$dead_o[ nDat$year >= input$year & nDat$iso_o == iso_orig() ] <- ifelse( input$fatalO > 100, 0, 1 )
-      nDat$dead_log_d[ nDat$year >= input$year ] <- ifelse( input$fatalH == 0, 0, log( input$fatalH ))
-      nDat$dead_log_o[ nDat$year >= input$year & nDat$iso_o == iso_orig() ] <- ifelse( input$fatalO == 0, 0, log( input$fatalO ))
+      nDat$dead_d[ nDat$year == input$year & nDat$iso_d == iso_host() ] <-
+                                              ifelse( input$fatalH > 100, 0, 1 )
+      nDat$dead_o[ nDat$year == input$year & nDat$iso_o == iso_orig() ] <-
+                                              ifelse( input$fatalO > 100, 0, 1 )
+      nDat$dead_log_d[ nDat$year == input$year & nDat$iso_d == iso_host() ] <-
+                              ifelse( input$fatalH == 0, 0, log( input$fatalH ))
+      nDat$dead_log_o[ nDat$year == input$year & nDat$iso_o == iso_orig() ] <-
+                              ifelse( input$fatalO == 0, 0, log( input$fatalO ))
       # modify Nyear_conf and Nyear_log
-      nDat$Nyear_conf_d[ nDat$year == input$year ] <- ifelse( input$fatalH > 50, 1, 0 )
-      nDat$Nyear_conf_o[ nDat$year == input$year & nDat$iso_o == iso_orig() ] <- ifelse( input$fatalO > 50, 1, 0 )
-      nDat$Nyear_log_d <- ifelse( input$fatalH < 50, 0, nDat$Nyear_log_d  )
-      nDat$Nyear_log_o <- ifelse( input$fatalO < 50, 0, nDat$Nyear_log_o  )
+      nDat$Nyear_conf_d[ nDat$year == input$year & nDat$iso_d == iso_host()] <-
+                                               ifelse( input$fatalH > 50, 1, 0 )
+      nDat$Nyear_conf_o[ nDat$year == input$year & nDat$iso_o == iso_orig() ] <-
+                                               ifelse( input$fatalO > 50, 1, 0 )
+      # nDat$Nyear_log_d[ nDat$year == input$year & nDat$iso_d == iso_host()] <- 
+      #        if( input$fatalH < 50 ){ 
+      #           0 } else{ 
+      #               nDat$Nyear_log_d[ nDat$year == input$year & nDat$iso_d == iso_host()]}
+      # nDat$Nyear_log_o[ nDat$year == input$year & nDat$iso_o == iso_orig()] <- 
+      #    if( input$fatalH < 50 ){ 
+      #       0 } else{ 
+      #           nDat$Nyear_log_o[ nDat$year == input$year & nDat$iso_o == iso_orig()]}
       # modify GDP_PP_d and GDP_PPP_d
       if( input$gdpH != 0 ){
-         nDat$GDP_PP_d[ nDat$year >= input$year ] <-
-            nDat$GDP_PP_d[ nDat$year >= input$year ] * ( 1 + input$gdpH/100 )
-         nDat$GDP_PPP_d[ nDat$year >= input$year ] <-
-            nDat$GDP_PPP_d[ nDat$year >= input$year ] * ( 1 + input$gdpH/100 )
+         nDat$GDP_PP_d[ nDat$year == input$year & nDat$iso_d == iso_host()] <-
+             nDat$GDP_PP_d[ nDat$year == input$year & nDat$iso_d == iso_host()] * ( 1 + input$gdpH/100 )
+         nDat$GDP_PPP_d[ nDat$year == input$year & nDat$iso_d == iso_host()] <-
+             nDat$GDP_PPP_d[ nDat$year == input$year & nDat$iso_d == iso_host()] * ( 1 + input$gdpH/100 )
       }
       # modify GDP_PP_o and GDP_PPP_o
       if( input$gdpO != 0 ){
-         nDat$GDP_PP_o[ nDat$year >= input$year & nDat$iso_o == iso_orig() ] <-
-            nDat$GDP_PP_o[ nDat$year >= input$year & nDat$iso_o == iso_orig() ] * ( 1 + input$gdpO/100 )
-         nDat$GDP_PPP_o[ nDat$year >= input$year & nDat$iso_o == iso_orig() ] <-
-            nDat$GDP_PPP_o[ nDat$year >= input$year & nDat$iso_o == iso_orig() ] * ( 1 + input$gdpO/100 )
+         nDat$GDP_PP_o[ nDat$year == input$year & nDat$iso_o == iso_orig() ] <-
+            nDat$GDP_PP_o[ nDat$year == input$year & nDat$iso_o == iso_orig() ] * ( 1 + input$gdpO/100 )
+         nDat$GDP_PPP_o[ nDat$year == input$year & nDat$iso_o == iso_orig() ] <-
+            nDat$GDP_PPP_o[ nDat$year == input$year & nDat$iso_o == iso_orig() ] * ( 1 + input$gdpO/100 )
       }
       # modify CL_d
-      nDat$CL_d[ nDat$year >= input$year ] <- ifelse( input$civlibH == "free", 2,
-                                                 ifelse( input$civlibH == "partfree", 5, 7 ))
+      nDat$CL_d[ nDat$year == input$year & nDat$iso_d == iso_host()] <- as.numeric( input$civlibH )
+
       # modify CL_o
-      nDat$CL_o[ nDat$year >= input$year & nDat$iso_o == iso_orig() ] <-
-                                              ifelse( input$civlibO == "free", 2,
-                                                 ifelse( input$civlibO == "partfree", 5, 7 ))
+      nDat$CL_o[ nDat$year == input$year & nDat$iso_o == iso_orig()] <- as.numeric( input$civlibO )
+
       # modify PR_d
-      nDat$PR_d[ nDat$year >= input$year ] <- ifelse( input$polRH == "free", 2,
-                                                 ifelse( input$polRH == "partfree", 5, 7 ))
-      # modify CL_d
-      nDat$PR_o[ nDat$year >= input$year & nDat$iso_o == iso_orig() ] <-
-                                              ifelse( input$polRO == "free", 2,
-                                                 ifelse( input$polRO == "partfree", 5, 7 ))
+      nDat$PR_d[ nDat$year == input$year & nDat$iso_d == iso_host()] <- as.numeric( input$polRH )
+
+      # modify PR_o
+      nDat$PR_o[ nDat$year == input$year & nDat$iso_o == iso_orig()] <- as.numeric( input$polRO )
+
       # modify index0asylum
       if( input$temAsyl == TRUE ){
-         nDat$index0asylum[ nDat$year >= input$year & nDat$iso_o == iso_orig() ] <- 1
+         nDat$index0asylum[ nDat$year == input$year &
+                            nDat$iso_o == iso_orig() &
+                            nDat$iso_d == iso_host()] <- 1
       } else{
-         nDat$index0asylum[ nDat$year >= input$year & nDat$iso_o == iso_orig() ] <- 0
+         nDat$index0asylum[ nDat$year == input$year &
+                            nDat$iso_o == iso_orig() &
+                            nDat$iso_d == iso_host()] <- 0
       }
       nDat
    }
@@ -384,7 +400,7 @@ server <- function( input, output, session ) {
    observeEvent( c( input$orig, input$year ), {
       default_values <- impu21[[1]] %>% 
                         filter( iso_o == iso_orig() & year == input$year ) %>%
-                        select( best_o, CL_o_factor, GDP_PP_o, PR_o_factor ) %>% 
+                        select( best_o, CL_o, GDP_PP_o, PR_o ) %>% 
                         distinct()
       updateSliderInput( inputId = "fatalO", 
                          value = default_values$best_o, 
@@ -394,15 +410,15 @@ server <- function( input, output, session ) {
                              label = paste0( "GDP per capita $", 
                                      round( default_values$GDP_PP_o, 0 ), 
                                      ". Percentage change:"))
-      updateRadioButtons( inputId = "civlibO", selected = default_values$CL_o_factor )
-      updateRadioButtons( inputId = "polRO", selected = default_values$PR_o_factor )
+      updateSelectInput( inputId = "civlibO", selected = default_values$CL_o )
+      updateSelectInput( inputId = "polRO", selected = default_values$PR_o )
    })
 
    ### update buttons and sliders for host country
    observeEvent( c( input$host, input$orig, input$year ), {
       default_values <- impu21[[1]] %>% 
                         filter( iso_d == iso_host() & year == input$year ) %>%
-                        select( best_d, CL_d_factor, GDP_PP_d, PR_d_factor ) %>% 
+                        select( best_d, CL_d, GDP_PP_d, PR_d ) %>% 
                         distinct()
       updateSliderInput( inputId = "fatalH", 
                          value = default_values$best_d, 
@@ -412,8 +428,8 @@ server <- function( input, output, session ) {
                              label = paste0( "GDP per capita $", 
                                              round( default_values$GDP_PP_d, 0 ), 
                                              ". Percentage change:"))
-      updateRadioButtons( inputId = "civlibH", selected = default_values$CL_d_factor )
-      updateRadioButtons( inputId = "polRH", selected = default_values$PR_d_factor )
+      updateSelectInput( inputId = "civlibH", selected = default_values$CL_d )
+      updateSelectInput( inputId = "polRH", selected = default_values$PR_d )
       default_click <- impu21[[1]] %>% 
                       filter( iso_d == iso_host() & iso_o == iso_orig(), year == input$year ) %>%
                       select( index0asylum ) %>% 
@@ -422,18 +438,22 @@ server <- function( input, output, session ) {
    })
    
    
-   ### reactive newdata
-   # newdata <- reactive({
-   #      newdata <- lapply( impu21, new_data )
+   # observeEvent( input$civlibH, {
+   #    print(paste0("You have chosen: ", class( input$civlibH )))
    # })
+ 
+   ## reactive newdata
+   newdata <- reactive({
+        newdata <- lapply( impu21, new_data )
+   })
    
-                                 
    ### predictions
    predictions <- reactive({
+      #browser()
         flow_predictions <- mapply( function( x, y ) 
                                     predict( x, newdata = y, type = "response" ), 
                                              #se.fit = TRUE, interval="confidence" ),
-                                    x = est_models, y = impu21 )
+                                    x = est_models, y = newdata())
         #round( rowMeans( flow_predictions ), 0 )
         pre_newarrival <- data.frame( iso_o = impu21[[1]]$iso_o, 
                                       iso_d = impu21[[1]]$iso_d, 
@@ -608,12 +628,23 @@ server <- function( input, output, session ) {
    
    ### calculate stock data 
    stock <- reactive({
+      # percent venezuelans
+      perc_ven <- predictions() %>% 
+                  group_by( year ) %>% 
+                  summarise( percVDA = sum( var[ iso_o == "VEN" ])/sum( var ))
+      
       # create host country sub set and nest grouped data frame 
       dat_stock <- dat_stock %>% 
                    left_join( predictions(), by = c( "iso_o", "iso_d", "year" )) %>% 
                    filter( iso_d == iso_host() & year %in% c( 2020:2023 )) %>% 
                    rename( predarrival = var ) %>% 
+                   mutate( percVDA = replace( percVDA, year == 2021, perc_ven$percVDA[1]), 
+                           percVDA = replace( percVDA, year == 2022, perc_ven$percVDA[2]),
+                           percVDA = replace( percVDA, year == 2023, perc_ven$percVDA[3])) %>% 
                    group_by( iso_o ) %>% 
+                   mutate( deci_rate_d = replace( deci_rate_d, is.na( deci_rate_d ), 0 ),
+                           deci_posi_rate_o = replace( deci_posi_rate_o, is.na( deci_posi_rate_o ), deci_rate_d ), 
+                           index0asylum = replace( index0asylum, is.na( index0asylum ), 0 )) %>%
                    nest()
       # function to calculate new refugee, asylum seeker and vda stocks
       stock_calc <- function( df ){        
@@ -628,8 +659,6 @@ server <- function( input, output, session ) {
                          ( 1 - deci_rate_d[i]), 0 )
                # venezuelans
                vda[i] <- round( vda[i-1] + predarrival[i] * percVDA[i-1], 0 )
-               # percent venezuelans 
-               percVDA[i] <- vda[i]/predarrival[i]
             }
          })
       }
@@ -639,6 +668,8 @@ server <- function( input, output, session ) {
       dat_stock <- unnest( dat_stock, cols = c( data ))
       # select variables and rename 
       dat_stock %>% select( iso_o, iso_d, year, ref, asy, vda ) %>% 
+                    filter( iso_o != "UKN" ) %>%
+                    mutate( vda = replace( vda, iso_o != "VEN", 0 )) %>% 
                     rename( country_origin = iso_o, 
                             country_host = iso_d, 
                             refugee_stocks = ref, 
@@ -661,7 +692,7 @@ server <- function( input, output, session ) {
    ### table display risk data  
    output$rawtable <- renderPrint({
       orig <- options( width = 1000 )
-      print( tail( stock(), input$maxrows ), row.names = FALSE)
+      print( tail( stock(), req( input$maxrows )), row.names = FALSE)
       options( orig )
    })
    
