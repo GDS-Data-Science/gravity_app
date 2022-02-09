@@ -229,7 +229,8 @@ ui <- navbarPage(
                                                           "5 Partly free" = 5, 
                                                           "6 Unfree" = 6, 
                                                           "7 Very unfree" = 7 )), 
-                              checkboxInput( "temAsyl", "Temporary Asylum" ),
+                              checkboxInput( "temAsyl", "Temporary Asylum" ), 
+                              actionButton( "go", "Run" )
                          ) # end column
                    ), # end fluidrow   
                    
@@ -392,14 +393,13 @@ server <- function( input, output, session ) {
       nDat
    }
 
-   ### get iso codes 
-   iso_orig <- reactive({ dat$iso3[ dat$gis_name == input$orig ]})
-   iso_host <- reactive({ dat$iso3[ dat$gis_name == input$host ]})   
+   isoOrig <- reactive({ dat$iso3[ dat$gis_name == input$orig ]})
+   isoHost <- reactive({ dat$iso3[ dat$gis_name == input$host ]}) 
    
    ### update buttons and sliders for country of origin   
    observeEvent( c( input$orig, input$year ), {
       default_values <- impu21[[1]] %>% 
-                        filter( iso_o == iso_orig() & year == input$year ) %>%
+                        filter( iso_o == isoOrig() & year == input$year ) %>%
                         select( best_o, CL_o, GDP_PP_o, PR_o ) %>% 
                         distinct()
       updateSliderInput( inputId = "fatalO", 
@@ -417,7 +417,7 @@ server <- function( input, output, session ) {
    ### update buttons and sliders for host country
    observeEvent( c( input$host, input$orig, input$year ), {
       default_values <- impu21[[1]] %>% 
-                        filter( iso_d == iso_host() & year == input$year ) %>%
+                        filter( iso_d == isoHost() & year == input$year ) %>%
                         select( best_d, CL_d, GDP_PP_d, PR_d ) %>% 
                         distinct()
       updateSliderInput( inputId = "fatalH", 
@@ -431,7 +431,7 @@ server <- function( input, output, session ) {
       updateSelectInput( inputId = "civlibH", selected = default_values$CL_d )
       updateSelectInput( inputId = "polRH", selected = default_values$PR_d )
       default_click <- impu21[[1]] %>% 
-                      filter( iso_d == iso_host() & iso_o == iso_orig(), year == input$year ) %>%
+                      filter( iso_d == isoHost() & iso_o == isoOrig(), year == input$year ) %>%
                       select( index0asylum ) %>% 
                       distinct()
       updateCheckboxInput( inputId = "temAsyl", value = as.logical( default_click$index0asylum ))
@@ -441,9 +441,13 @@ server <- function( input, output, session ) {
    # observeEvent( input$civlibH, {
    #    print(paste0("You have chosen: ", class( input$civlibH )))
    # })
+   
+   ### get iso codes 
+   iso_orig <- eventReactive( input$go, { dat$iso3[ dat$gis_name == input$orig ]})
+   iso_host <- eventReactive( input$go, { dat$iso3[ dat$gis_name == input$host ]})  
  
    ## reactive newdata
-   newdata <- reactive({
+   newdata <- eventReactive( input$go, {
         newdata <- lapply( impu21, new_data )
    })
    
