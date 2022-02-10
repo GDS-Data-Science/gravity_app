@@ -350,17 +350,24 @@ data_vda <- read_dta( "../Data/Rawdata/VDA_2017_2020.dta" )
 data_flow <- read_dta( "../Data/Rawdata/UNHCR_Flow.dta" )
 data_stock <- read_dta( "../Data/Rawdata/UNHCR_Stock.dta" )
 
+#### create percVDA data 
+data_vda <- data_vda %>% 
+            group_by( iso_d ) %>% 
+            filter( row_number() == n()) %>% 
+            select( iso_o, iso_d, percVDA )            
+
 #### merge data sets 
 # merge 
 dat_stock <- data_stock %>% 
              full_join( data_flow, by = c( "iso_o", "iso_d", "year" )) %>% 
-             left_join( data_vda, by = c( "iso_o", "iso_d", "year" ))  %>% 
              select( -c( Id.x, Id.y, index0asylum )) %>% 
              replace( is.na(.), 0 ) %>% 
              filter( year == 2020 ) %>% 
              group_by( iso_o, iso_d ) %>% 
              group_modify( ~ add_row( .x, year = 2021:2025 )) %>% 
              ungroup() %>% 
+             left_join( data_vda, by = c( "iso_o", "iso_d" ))  %>%
+             mutate( percVDA = replace( percVDA, is.na( percVDA ), 0 )) %>% 
              left_join( data_deci_d, by = c( "iso_d" )) %>% 
              left_join( data_deci_o, by = c( "iso_o", "iso_d" )) %>% 
              filter( iso_o != iso_d )

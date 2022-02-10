@@ -28,7 +28,7 @@ library( utils )
 
 #============================== read in data ===================================
 
-dat <- read.csv( "input_data/CountriesRegions.csv" )
+dat <- read.csv( "input_data/CountriesRegions.csv", fileEncoding = "ISO-8859-1" )
 load( "input_data/impuData21.Rdata" )
 load( "input_data/impuData15.Rdata" )
 load( "input_data/estimations.Rdata" )
@@ -286,31 +286,32 @@ ui <- navbarPage(
                            tags$li( "Choose the year of the modification." ),
                            tags$li( "Choosing country and year, will automatically install the expected default 
                                      values for all variables of a given country of origin and host country.
-                                     Please note, that because these are predicted values, 
+                                     Please note, that because the default values are predicted values, 
                                      these values will come with some uncertainty and will not necessarily 
                                      reflect the newest developments. 
-                                     As a user, you can now use your expert knowledge to 
+                                     As a user, you can now apply your expert knowledge to 
                                      modify these values according to your expectations or interests.
                                      For example, you can increase the number of conflict fatalities 
                                      in the country of origin for the next year and reduce the 
                                      per capita GDP of the host country by 2% to see what an impact 
                                      these changes would have on the expected refugee flows between 
                                      your chosen country pair." ), 
-                           tags$li( "Once all parameters are set, click on the button 'Run Simulation'.
+                           tags$li( "Once all parameters are set, click on the button 'Run'.
                                      Clicking this button will update the prediction of future refugee 
                                      flows and stock figures as they could be expected as a consequence of the 
                                      chosen modifications." ), 
-                           tags$li( "The updated results can be downloaded as a CSV file under tab 
-                                    'Data Download'.")
+                           tags$li( "The predicted stock figures for your chosen host country
+                                     can be seen and downloaded as a .CSV file under tab 'Data Download'.")
                         )),
                    div( class = "text",
                         tags$h4( "Development and Maintenance" ),
                        "Data Science Team, Statistics and Demographics Section (SDS), GDS", tags$br(),
                         tags$br(), tags$h4( "Contact" ),
                        "pellandr@unhcr.org", tags$br(),
+                       "huang@unhcr.org", tags$br()),
                        "hennings@unhcr.org", tags$br(),
                        "delpanta@unhcr.org", tags$br(),
-                       "huang@unhcr.org", tags$br()),
+                       
                    
                    div( absolutePanel( bottom = 20, right = 60, width = 80,
                                        fixed=TRUE, draggable = FALSE, height = "auto",
@@ -632,24 +633,18 @@ server <- function( input, output, session ) {
    
    ### calculate stock data 
    stock <- reactive({
-      # percent venezuelans
-      perc_ven <- predictions() %>% 
-                  group_by( year ) %>% 
-                  summarise( percVDA = sum( var[ iso_o == "VEN" ])/sum( var ))
       
       # create host country sub set and nest grouped data frame 
       dat_stock <- dat_stock %>% 
                    left_join( predictions(), by = c( "iso_o", "iso_d", "year" )) %>% 
                    filter( iso_d == iso_host() & year %in% c( 2020:2023 )) %>% 
                    rename( predarrival = var ) %>% 
-                   mutate( percVDA = replace( percVDA, year == 2021, perc_ven$percVDA[1]), 
-                           percVDA = replace( percVDA, year == 2022, perc_ven$percVDA[2]),
-                           percVDA = replace( percVDA, year == 2023, perc_ven$percVDA[3])) %>% 
                    group_by( iso_o ) %>% 
                    mutate( deci_rate_d = replace( deci_rate_d, is.na( deci_rate_d ), 0 ),
                            deci_posi_rate_o = replace( deci_posi_rate_o, is.na( deci_posi_rate_o ), deci_rate_d ), 
                            index0asylum = replace( index0asylum, is.na( index0asylum ), 0 )) %>%
                    nest()
+      
       # function to calculate new refugee, asylum seeker and vda stocks
       stock_calc <- function( df ){        
          within( df, {
@@ -666,6 +661,7 @@ server <- function( input, output, session ) {
             }
          })
       }
+      
       # calculate stocks 
       dat_stock$data <- lapply( dat_stock$data, stock_calc ) 
       # unlist  
