@@ -28,7 +28,7 @@ country_gdp_ppp <- read_excel( "../Data/RawData/Pop_and_GDP_2019.xlsx", sheet = 
 country_cpi <- read_excel( "../Data/RawData/WEOOct2020all.xlsx", n_max = 8776  )
 country_geographics <- read_dta( "../Data/RawData/SPATIAL.dta" )
 country_conflict <- read_dta( "../Data/RawData/ged201.dta" )
-country_newarrival <- read_csv( "../Data/RawData/gravity.csv" )
+country_newarrival <- read_csv( "../Data/RawData/flowdata.csv" )
 
 #### clean data sets 
 ## country_distances
@@ -41,9 +41,11 @@ country_distances <- country_distances %>%
                      select( iso_o, iso_d, contig, comlang_off, comlang_ethno, 
                              colony, comcol, col45, smctry, dist ) %>% 
                      filter( iso_o != iso_d ) %>%
-                     filter( !( iso_o %in% c( "YUG", "ZAR" )) & !( iso_d %in% c( "YUG", "ZAR" )))
-   
-
+                     filter( !( iso_o %in% c( "YUG", "ZAR" )) & !( iso_d %in% c( "YUG", "ZAR" ))) %>% 
+                     mutate( id = paste0( iso_o, iso_d )) %>% 
+                     distinct( id, .keep_all = TRUE ) %>% 
+                     select( -id )
+                     
 ## country_area
 # correct country codes
 country_area_language$iso <- iso_codes( country_area_language$iso2, cm = 'iso3_alpha2', type = "iso3_alpha3" )
@@ -185,6 +187,7 @@ country_conflict <- country_conflict %>%
 ## country_newarrival
 # select variables 
 country_newarrival <- country_newarrival %>% 
+                      filter( !is.na( iso_o )) %>%    
                       select( iso_o, iso_d, year, Id, newarrival, index0asylum )
 
 
@@ -214,18 +217,19 @@ dat <- dat %>% mutate( typeOfViolence =
                         if_else( year < 2020 & best_est < 50, impute.zero( Nyear_conflict ), Nyear_conflict ))
 
 # replace missings with value of 2020 
-impute.2020 <- function(x) replace( x, c( 20:25 ), x[ c( 19 )])
+impute.2020 <- function(x) replace( x, c( 20:24 ), x[ c( 19 )])
 dat <- dat %>% group_by( ISO ) %>% 
                mutate( typeOfViolence = impute.2020( typeOfViolence ), 
                        best_est = impute.2020( best_est ), 
                        Nyear_conflict = impute.2020( Nyear_conflict ),
                        CL = impute.2020( CL ),
-                       PR = impute.2020( PR ))
+                       PR = impute.2020( PR )) %>% 
+               ungroup() 
 
 #### create new variables
 dat <- within( dat, {
    # dummy variables
-   dead <- ifelse( best_est > 100, 0, 1 ) 
+   dead <- ifelse( best_est > 25, 1, 0 ) 
    Nyear_conf <- ifelse( Nyear_conflict == 0, 0, 1 ) 
    # log transformation
    dead_log <- ifelse( best_est == 0, 0, log( best_est ))
@@ -274,41 +278,19 @@ compare.density( impu, var = "dead_log" )
 # merging function 
 merge2 <- function( dat ){
 # create three dimensional array
-dat_o <- dat %>% filter( ISO %in% country_newarrival$iso_o ) %>%
-                 rename( iso_o = ISO, pop_o = pop, CPI_o = CPI, Country_o = Country, 
-                         GDP_PP_o = GDP_PP, GDP_PPP_o = GDP_PPP, island_o = island, 
-                         area_o = area, landlocked_o = landlocked, PR_o = PR, CL_o = CL, 
-                         type_of_violence_o = typeOfViolence, best_o = best_est, 
-                         Nyear_conflict_o = Nyear_conflict, Nyear_log_o = Nyear_log, 
-                         dead_log_o = dead_log, Nyear_conf_o = Nyear_conf, dead_o = dead )
-
-dat_d <- dat %>% filter( ISO %in% country_newarrival$iso_d ) %>%
-                 rename( iso_d = ISO, pop_d = pop, CPI_d = CPI, Country_d = Country, 
-                         GDP_PP_d = GDP_PP, GDP_PPP_d = GDP_PPP, island_d = island, 
-                         area_d = area, landlocked_d = landlocked, PR_d = PR, CL_d = CL, 
-                         type_of_violence_d = typeOfViolence, best_d = best_est, 
-                         Nyear_conflict_d = Nyear_conflict, Nyear_log_d = Nyear_log, 
-                         dead_log_d = dead_log, Nyear_conf_d = Nyear_conf, dead_d = dead )
-
-# join three dimensional arrays 
-est_dat <- dat_o %>% 
-           full_join( dat_d, by = "year" ) %>% 
-           mutate( ID = paste0( iso_o, iso_d )) %>% 
-           filter( ID %in% country_newarrival$Id ) %>% 
+est_dat <- expand_grid( iso_o = unique( dat$ISO ), iso_d = unique( dat$ISO ), year = 2017:2024 ) %>% 
+           filter( iso_o != iso_d ) %>% 
+           left_join( dat, by = c( "iso_o" = "ISO", "year" )) %>%
+           left_join( dat, by = c( "iso_d" = "ISO", "year" ), suffix = c( "_o", "_d" )) %>% 
            left_join( country_newarrival, by = c( "iso_o", "iso_d", "year" )) %>% 
-           select( iso_o, iso_d, year, ID, newarrival, index0asylum, pop_o, 
-                   pop_d, CPI_o, CPI_d, GDP_PP_o, 
-                   GDP_PP_d, GDP_PPP_o, GDP_PPP_d, island_o, island_d, area_o, 
-                   area_d, landlocked_o, landlocked_d, PR_o, PR_d, CL_o, CL_d, 
-                   type_of_violence_o, type_of_violence_d, best_o, best_d, 
-                   Nyear_conflict_o, Nyear_conflict_d, Nyear_log_o, Nyear_log_d, 
-                   dead_log_o, dead_log_d, Nyear_conf_o, Nyear_conf_d, dead_o, dead_d ) %>% 
-           left_join( country_distances, by = c( "iso_o", "iso_d" ))
+           select( -Id ) %>% 
+           mutate( newarrival = replace_na( newarrival, 0 ), 
+                   Id = paste0( iso_o, iso_d )) %>%
+           left_join( country_distances, by = c( "iso_o", "iso_d" )) 
 }
 
 # merging loop
 impu_dat <- lapply( impu$imputations, merge2 )
-
 
 ### data cleaning and imputation 
 ## replace missings with mean values
@@ -316,7 +298,18 @@ impu_dat <- lapply( impu$imputations, merge2 )
 impute.mean <- function(x) replace( x, is.na(x), round( mean( x, na.rm = TRUE ), 0 ))
 # application of input.mean function 
 cleanMean <- function( est_dat ){ 
-est_dat <- est_dat %>% mutate( contig = impute.mean( contig ),
+est_dat <- est_dat %>% group_by( Id ) %>% 
+                       mutate( contig = impute.mean( contig ),
+                               comlang_off = impute.mean( comlang_off ),
+                               comlang_ethno = impute.mean( comlang_ethno ),
+                               colony = impute.mean( colony ),
+                               comcol = impute.mean( comcol ),
+                               col45 = impute.mean( col45 ),
+                               smctry = impute.mean( smctry ),
+                               dist = impute.mean( dist ), 
+                               index0asylum = impute.mean( index0asylum )) %>% 
+                       ungroup() %>% 
+                       mutate( contig = impute.mean( contig ),
                                comlang_off = impute.mean( comlang_off ),
                                comlang_ethno = impute.mean( comlang_ethno ),
                                colony = impute.mean( colony ),
@@ -331,14 +324,14 @@ est_dat <- est_dat %>% mutate( contig = impute.mean( contig ),
 impu_clean <- lapply( impu_dat, cleanMean )
 
 #### generate training and predictive data sets 
-impu15 <- lapply( impu_clean, function(x) subset( x, year > 2014 & year < 2021 ))
-impu21 <- lapply( impu_clean, function(x) subset( x, year > 2020 ))
+impu17 <- lapply( impu_clean, function(x) subset( x, year >= 2017 & year <= 2021 ))
+impu22 <- lapply( impu_clean, function(x) subset( x, year >= 2021 ))
 
 #### save data sets
-save( impu15, file = "../Data/WorkData/impuData15.Rdata" )
-save( impu21, file = "../Data/WorkData/impuData21.Rdata" )
+save( impu17, file = "../Data/WorkData/impuData17.Rdata" )
+save( impu22, file = "../Data/WorkData/impuData22.Rdata" )
 
-
+stop()
 ################################################################################
 ##                                stock data                                  ##
 ################################################################################
@@ -346,30 +339,49 @@ save( impu21, file = "../Data/WorkData/impuData21.Rdata" )
 #### read in data 
 data_deci_o <- read_dta( "../Data/Rawdata/UNHCR_deci_posi_rate_o.dta" )
 data_deci_d <- read_dta( "../Data/Rawdata/UNHCR_deci_rate_d.dta" )
-data_vda <- read_dta( "../Data/Rawdata/VDA_2017_2020.dta" )
-data_flow <- read_dta( "../Data/Rawdata/UNHCR_Flow.dta" )
-data_stock <- read_dta( "../Data/Rawdata/UNHCR_Stock.dta" )
+data_vda <- read_csv( "../Data/Rawdata/vdadata.csv" )
+data_flow <- read_csv( "../Data/Rawdata/flowdata.csv" )
+data_stock <- read_csv( "../Data/Rawdata/stockdata.csv" )
 
-#### create percVDA data 
-data_vda <- data_vda %>% 
-            group_by( iso_d ) %>% 
-            filter( row_number() == n()) %>% 
-            select( iso_o, iso_d, percVDA )            
+#### create percVDA data
+data_vda <- subset( data_vda, year == 2021 )
+data_flow_sum <- data_flow %>% 
+                 filter( year == 2021 & iso_d %in% data_vda$iso_d ) %>% 
+                 group_by( iso_d ) %>% 
+                 summarise( total = sum( newarrival, na.rm = TRUE ))
+
+data_vda$percVDA <- data_vda$new_displaced/data_flow_sum$total 
+data_vda <- select( data_vda, -c( year, new_displaced, VDA ))
+
+#### correct problems with index0asylum 
+data_flow$index0asylum <- ifelse( data_flow$index0asylum > 1, 1, data_flow$index0asylum )
+data_flow <- arrange( data_flow, Id )
+for( i in 1:nrow( data_flow )){
+   if( is.na( data_flow$index0asylum[i] )){
+      data_flow$index0asylum[i] <- data_flow$index0asylum[i - 1]
+   } else{
+      data_flow$index0asylum[i] <- data_flow$index0asylum[i]
+   }
+}
 
 #### merge data sets 
 # merge 
 dat_stock <- data_stock %>% 
              full_join( data_flow, by = c( "iso_o", "iso_d", "year" )) %>% 
              select( -c( Id.x, Id.y, index0asylum )) %>% 
+             filter( !is.na( iso_o ) & !is.na( iso_d )) %>% 
              replace( is.na(.), 0 ) %>% 
-             filter( year == 2020 ) %>% 
+             filter( year == 2021 ) %>% 
              group_by( iso_o, iso_d ) %>% 
-             group_modify( ~ add_row( .x, year = 2021:2025 )) %>% 
+             group_modify( ~ add_row( .x, year = 2022:2024 )) %>% 
              ungroup() %>% 
              left_join( data_vda, by = c( "iso_o", "iso_d" ))  %>%
              mutate( percVDA = replace( percVDA, is.na( percVDA ), 0 )) %>% 
              left_join( data_deci_d, by = c( "iso_d" )) %>% 
              left_join( data_deci_o, by = c( "iso_o", "iso_d" )) %>% 
+             mutate( deci_rate_d = replace_na( deci_rate_d, mean( deci_rate_d, na.rm = TRUE )), 
+                     deci_posi_rate_o = replace_na( deci_posi_rate_o, mean( deci_posi_rate_o, na.rm = TRUE )),
+                     index0asylum = replace_na( index0asylum, round( mean( index0asylum, na.rm = TRUE ), 0 ))) %>%
              filter( iso_o != iso_d )
              
 save( dat_stock, file = "../Data/WorkData/stock_calc.Rdata" )
