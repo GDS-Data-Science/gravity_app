@@ -259,8 +259,11 @@ ui <- navbarPage(
                                              "Asylum Seeker Stocks" = "asylum_stocks" ),
                                 selected = "refugee_stocks" ),
                    verbatimTextOutput( "rawtable" ),
+                   h5( "Download stock data country of asylum" ),
+                   downloadButton( "downloadCsvhost", "Download as CSV" ),
+                   tags$br(), tags$br(), 
+                   h5( "Download all stock data" ),
                    downloadButton( "downloadCsv", "Download as CSV" ),
-                   tags$br()
          ), # end tabPanel 'Data Download'
 
 
@@ -656,9 +659,9 @@ server <- function( input, output, session ) {
       # create host country sub set and nest grouped data frame 
       dat_stock <- dat_stock %>% 
                    left_join( predictions(), by = c( "iso_o", "iso_d", "year" )) %>% 
-                   filter( iso_d == iso_host() & year %in% c( 2021:2024 )) %>% 
+                   filter( year %in% c( 2021:2024 )) %>% 
                    rename( predarrival = var ) %>% 
-                   group_by( iso_o ) %>% 
+                   group_by( iso_o, iso_d ) %>% 
                    mutate( deci_rate_d = replace( deci_rate_d, is.na( deci_rate_d ), 0 ),
                            deci_posi_rate_o = replace( deci_posi_rate_o, is.na( deci_posi_rate_o ), deci_rate_d ), 
                            index0asylum = replace( index0asylum, is.na( index0asylum ), 0 )) %>%
@@ -698,9 +701,14 @@ server <- function( input, output, session ) {
       
    })
    
+   ### table country of asylum 
+   stock_host <- reactive({
+      stock() %>% filter( country_asylum == iso_host())
+   })
+   
    ### make display table 
    display <- reactive({
-      totals <- stock() %>% 
+      totals <- stock_host() %>% 
                 group_by( country_asylum, year ) %>% 
                 summarise( refugee_stocks = sum( refugee_stocks, na.rm = TRUE ), 
                            asylum_stocks = sum( asylum_stocks, na.rm = TRUE ), 
@@ -730,14 +738,23 @@ server <- function( input, output, session ) {
       as.data.frame( view_table )
    })
    
+   ### download stock data all countries   
+   output$downloadCsv <- downloadHandler(
+      filename = function() {
+         paste( "stock_data", ".csv", sep = "" )
+      },
+      content = function(file) {
+         write.csv( stock(), file )
+      })
+   
    ### download stock data country of asylum   
    output$downloadCsvhost <- downloadHandler(
       filename = function() {
          paste( "stock_data_country_asylum", ".csv", sep = "" )
       },
       content = function(file) {
-         write.csv( stock(), file )
-      }) 
+         write.csv( stock_host(), file )
+      })
    
    ### table display risk data  
    output$rawtable <- renderPrint({
