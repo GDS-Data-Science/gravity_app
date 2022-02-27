@@ -460,11 +460,6 @@ server <- function( input, output, session ) {
       updateCheckboxInput( inputId = "temAsyl", value = as.logical( default_click$index0asylum ))
    })
    
-   
-   # observeEvent( input$civlibH, {
-   #    print(paste0("You have chosen: ", class( input$civlibH )))
-   # })
-   
    ### get iso codes 
    iso_orig <- eventReactive( input$go, { dat$iso3[ dat$gis_name == input$orig ]})
    iso_host <- eventReactive( input$go, { dat$iso3[ dat$gis_name == input$host ]})  
@@ -472,12 +467,11 @@ server <- function( input, output, session ) {
    ## reactive newdata
    newdata <- eventReactive( input$go, {
         newdata <- lapply( impu22, new_data )
+        newdata 
    })
    
    ### predictions
    predictions <- reactive({
-      #print( class( input$year ))
-      #browser()
         flow_predictions <- mapply( function( x, y ) 
                                     predict( x, newdata = y, type = "response" ), 
                                              #se.fit = TRUE, interval="confidence" ),
@@ -664,7 +658,8 @@ server <- function( input, output, session ) {
                    group_by( iso_o, iso_d ) %>% 
                    mutate( deci_rate_d = replace_na( deci_rate_d, 0 ),
                            deci_posi_rate_o = replace( deci_posi_rate_o, is.na( deci_posi_rate_o ), deci_rate_d ), 
-                           index0asylum = replace_na( index0asylum, 0 )) %>%
+                           index0asylum = replace_na( index0asylum, 0 ), 
+                           predarrival = replace_na( predarrival, 0 )) %>%
                    nest()
       
       # function to calculate new refugee, asylum seeker and vda stocks
@@ -708,7 +703,6 @@ server <- function( input, output, session ) {
    
    ### make display table 
    display <- reactive({
-      #browser()
       totals <- stock_host() %>% 
                 group_by( country_asylum, year ) %>% 
                 summarise( refugee_stocks = sum( refugee_stocks, na.rm = TRUE ), 
@@ -760,7 +754,7 @@ server <- function( input, output, session ) {
    ### table display risk data  
    output$rawtable <- renderPrint({
       orig <- options( width = 1000 )
-      print( display(), row.names = FALSE)
+      print( display(), row.names = FALSE)   
       options( orig )
    })
    
