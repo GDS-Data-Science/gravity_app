@@ -119,7 +119,7 @@ line_plot <- function( data ){
    g <- ggplot( data, aes( x = year, y = var )) +
         geom_line( color = "#057fab", size = 1 ) +
         #geom_ribbon( aes( ymin = low, ymax = high ), alpha = 0.1 ) + 
-        geom_vline( xintercept = 2021, color = "red", size = 1.3 ) +
+        geom_vline( xintercept = 2021.5 , color = "red", size = 1.3 ) +
         labs( y = "", x = "" ) +
         theme_minimal() +
         theme( axis.line.x = element_blank(), 
@@ -191,7 +191,7 @@ ui <- navbarPage(
                               pickerInput( "year", "Select year", 
                                            choices = c( 2022, 2023, 2024 ), 
                                            selected = 2022,
-                                           options = list( `actions-box` = TRUE, 
+                                           options = list( `actions-box` = FALSE, 
                                                            `none-selected-text` = "Please make a selection!" ),
                                            multiple = TRUE )
                               ),
@@ -243,7 +243,7 @@ ui <- navbarPage(
                                                           "6 Unfree" = 6, 
                                                           "7 Very unfree" = 7 )), 
                               checkboxInput( "temAsyl", "Temporary Protection" ), 
-                              actionButton( "go", "Run" )
+                              actionButton( "go", "RUN", width = "150px", class = "btn-primary" )
                          ) # end column
                    ), # end fluidrow   
                    
@@ -356,60 +356,60 @@ server <- function( input, output, session ) {
    ## interactive filter function      
    new_data <- function( nDat ){
       # modify dead and dead_log
-      nDat$dead_d[ nDat$year %in% input$year & nDat$iso_d == iso_host() ] <-
-                                              ifelse( input$fatalH > 100, 0, 1 )
-      nDat$dead_o[ nDat$year %in% input$year & nDat$iso_o == iso_orig() ] <-
-                                              ifelse( input$fatalO > 100, 0, 1 )
-      nDat$dead_log_d[ nDat$year %in% input$year & nDat$iso_d == iso_host() ] <-
+      nDat$dead_d[ nDat$year %in% as.numeric( input$year ) & nDat$iso_d == iso_host() ] <-
+                                              ifelse( input$fatalH > 100, 1, 0 )
+      nDat$dead_o[ nDat$year %in% as.numeric( input$year ) & nDat$iso_o == iso_orig() ] <-
+                                              ifelse( input$fatalO > 100, 1, 0 )
+      nDat$dead_log_d[ nDat$year %in% as.numeric( input$year ) & nDat$iso_d == iso_host() ] <-
                               ifelse( input$fatalH == 0, 0, log( input$fatalH ))
-      nDat$dead_log_o[ nDat$year %in% input$year & nDat$iso_o == iso_orig() ] <-
+      nDat$dead_log_o[ nDat$year %in% as.numeric( input$year ) & nDat$iso_o == iso_orig() ] <-
                               ifelse( input$fatalO == 0, 0, log( input$fatalO ))
-      # modify Nyear_conf and Nyear_log
-      nDat$Nyear_conf_d[ nDat$year %in% input$year & nDat$iso_d == iso_host()] <-
+      # # modify Nyear_conf and Nyear_log
+      nDat$Nyear_conf_d[ nDat$year %in% as.numeric( input$year ) & nDat$iso_d == iso_host()] <-
                                                ifelse( input$fatalH > 50, 1, 0 )
-      nDat$Nyear_conf_o[ nDat$year %in% input$year & nDat$iso_o == iso_orig() ] <-
+      nDat$Nyear_conf_o[ nDat$year %in% as.numeric( input$year ) & nDat$iso_o == iso_orig() ] <-
                                                ifelse( input$fatalO > 50, 1, 0 )
-      # nDat$Nyear_log_d[ nDat$year == input$year & nDat$iso_d == iso_host()] <- 
-      #        if( input$fatalH < 50 ){ 
-      #           0 } else{ 
-      #               nDat$Nyear_log_d[ nDat$year == input$year & nDat$iso_d == iso_host()]}
-      # nDat$Nyear_log_o[ nDat$year == input$year & nDat$iso_o == iso_orig()] <- 
-      #    if( input$fatalH < 50 ){ 
-      #       0 } else{ 
-      #           nDat$Nyear_log_o[ nDat$year == input$year & nDat$iso_o == iso_orig()]}
+      # nDat$Nyear_log_d[ nDat$year == as.numeric( input$year ) & nDat$iso_d == iso_host()] <-
+      #        if( input$fatalH < 50 ){
+      #           0 } else{
+      #               nDat$Nyear_log_d[ nDat$year == as.numeric( input$year ) & nDat$iso_d == iso_host()]}
+      # nDat$Nyear_log_o[ nDat$year == as.numeric( input$year ) & nDat$iso_o == iso_orig()] <-
+      #    if( input$fatalH < 50 ){
+      #       0 } else{
+      #           nDat$Nyear_log_o[ nDat$year == as.numeric( input$year ) & nDat$iso_o == iso_orig()]}
       # modify GDP_PP_d and GDP_PPP_d
       if( input$gdpH != 0 ){
-         nDat$GDP_PP_d[ nDat$year %in% input$year & nDat$iso_d == iso_host()] <-
-             nDat$GDP_PP_d[ nDat$year %in% input$year & nDat$iso_d == iso_host()] * ( 1 + input$gdpH/100 )
-         nDat$GDP_PPP_d[ nDat$year %in% input$year & nDat$iso_d == iso_host()] <-
-             nDat$GDP_PPP_d[ nDat$year %in% input$year & nDat$iso_d == iso_host()] * ( 1 + input$gdpH/100 )
+         nDat$GDP_PP_d[ nDat$year %in% as.numeric( input$year ) & nDat$iso_d == iso_host()] <-
+             nDat$GDP_PP_d[ nDat$year %in% as.numeric( input$year ) & nDat$iso_d == iso_host()] * ( 1 + input$gdpH/100 )
+         nDat$GDP_PPP_d[ nDat$year %in% as.numeric( input$year ) & nDat$iso_d == iso_host()] <-
+             nDat$GDP_PPP_d[ nDat$year %in% as.numeric( input$year ) & nDat$iso_d == iso_host()] * ( 1 + input$gdpH/100 )
       }
       # modify GDP_PP_o and GDP_PPP_o
       if( input$gdpO != 0 ){
-         nDat$GDP_PP_o[ nDat$year %in% input$year & nDat$iso_o == iso_orig() ] <-
-            nDat$GDP_PP_o[ nDat$year %in% input$year & nDat$iso_o == iso_orig() ] * ( 1 + input$gdpO/100 )
-         nDat$GDP_PPP_o[ nDat$year %in% input$year & nDat$iso_o == iso_orig() ] <-
-            nDat$GDP_PPP_o[ nDat$year %in% input$year & nDat$iso_o == iso_orig() ] * ( 1 + input$gdpO/100 )
+         nDat$GDP_PP_o[ nDat$year %in% as.numeric( input$year ) & nDat$iso_o == iso_orig() ] <-
+            nDat$GDP_PP_o[ nDat$year %in% as.numeric( input$year ) & nDat$iso_o == iso_orig() ] * ( 1 + input$gdpO/100 )
+         nDat$GDP_PPP_o[ nDat$year %in% as.numeric( input$year ) & nDat$iso_o == iso_orig() ] <-
+            nDat$GDP_PPP_o[ nDat$year %in% as.numeric( input$year ) & nDat$iso_o == iso_orig() ] * ( 1 + input$gdpO/100 )
       }
       # modify CL_d
-      nDat$CL_d[ nDat$year %in% input$year & nDat$iso_d == iso_host()] <- as.numeric( input$civlibH )
+      nDat$CL_d[ nDat$year %in% as.numeric( input$year ) & nDat$iso_d == iso_host()] <- as.numeric( input$civlibH )
 
       # modify CL_o
-      nDat$CL_o[ nDat$year %in% input$year & nDat$iso_o == iso_orig()] <- as.numeric( input$civlibO )
+      nDat$CL_o[ nDat$year %in% as.numeric( input$year ) & nDat$iso_o == iso_orig()] <- as.numeric( input$civlibO )
 
       # modify PR_d
-      nDat$PR_d[ nDat$year %in% input$year & nDat$iso_d == iso_host()] <- as.numeric( input$polRH )
+      nDat$PR_d[ nDat$year %in% as.numeric( input$year ) & nDat$iso_d == iso_host()] <- as.numeric( input$polRH )
 
       # modify PR_o
-      nDat$PR_o[ nDat$year %in% input$year & nDat$iso_o == iso_orig()] <- as.numeric( input$polRO )
+      nDat$PR_o[ nDat$year %in% as.numeric( input$year ) & nDat$iso_o == iso_orig()] <- as.numeric( input$polRO )
 
       # modify index0asylum
       if( input$temAsyl == TRUE ){
-         nDat$index0asylum[ nDat$year %in% input$year &
+         nDat$index0asylum[ nDat$year %in% as.numeric( input$year ) &
                             nDat$iso_o == iso_orig() &
                             nDat$iso_d == iso_host()] <- 1
       } else{
-         nDat$index0asylum[ nDat$year %in% input$year &
+         nDat$index0asylum[ nDat$year %in% as.numeric( input$year ) &
                             nDat$iso_o == iso_orig() &
                             nDat$iso_d == iso_host()] <- 0
       }
@@ -476,6 +476,7 @@ server <- function( input, output, session ) {
    
    ### predictions
    predictions <- reactive({
+      #print( class( input$year ))
       #browser()
         flow_predictions <- mapply( function( x, y ) 
                                     predict( x, newdata = y, type = "response" ), 
@@ -524,18 +525,18 @@ server <- function( input, output, session ) {
    output$sankey22 <- renderSankeyNetwork({
       # 22 data
       data_sankey_22_max  <- sankey_dat() %>%
-                             filter( year == 2022 ) %>%
-                             top_n( 4 ) %>%
-                             select( -year )
+         filter( year == 2022 ) %>%
+         top_n( 4 ) %>%
+         select( -year )
       
       iso_d_totals <- iso_d_totals() %>%
-                      filter( iso_d == iso_host() & year == 2022 )
+         filter( iso_d == iso_host() & year == 2022 )
       
       if( !( iso_orig() %in% data_sankey_22_max$iso_o )){
          data_sankey_22 <- sankey_dat() %>%
-                           filter( year == 2022 & iso_o == iso_orig()) %>%
-                           select( -year ) %>%
-                           bind_rows( data_sankey_22_max )  
+            filter( year == 2022 & iso_o == iso_orig()) %>%
+            select( -year ) %>%
+            bind_rows( data_sankey_22_max )  
       } else{
          data_sankey_22 <- data_sankey_22_max 
       }
@@ -543,9 +544,9 @@ server <- function( input, output, session ) {
       tmp_total <- iso_d_totals$total - sum( data_sankey_22$var ) 
       
       data_sankey_22 <- data_sankey_22 %>%
-                        add_row( iso_o = "REST",
-                                 iso_d = iso_host(),
-                                 var =  tmp_total )
+         add_row( iso_o = "REST",
+                  iso_d = iso_host(),
+                  var =  tmp_total )
       
       # nodes data frame
       nodes <- data.frame( name = c( as.character( data_sankey_22$iso_o ),
@@ -554,7 +555,7 @@ server <- function( input, output, session ) {
       # id connections
       data_sankey_22$IDsource = match( data_sankey_22$iso_o, nodes$name ) - 1
       data_sankey_22$IDtarget = match( data_sankey_22$iso_d, nodes$name ) - 1
-
+      
       # plot network
       sankeyNetwork( Links = data_sankey_22, Nodes = nodes,
                      Source = "IDsource", Target = "IDtarget",
@@ -655,16 +656,15 @@ server <- function( input, output, session ) {
    
    ### calculate stock data 
    stock <- reactive({
-      #browser()
       # create host country sub set and nest grouped data frame 
       dat_stock <- dat_stock %>% 
                    left_join( predictions(), by = c( "iso_o", "iso_d", "year" )) %>% 
                    filter( year %in% c( 2021:2024 )) %>% 
                    rename( predarrival = var ) %>% 
                    group_by( iso_o, iso_d ) %>% 
-                   mutate( deci_rate_d = replace( deci_rate_d, is.na( deci_rate_d ), 0 ),
+                   mutate( deci_rate_d = replace_na( deci_rate_d, 0 ),
                            deci_posi_rate_o = replace( deci_posi_rate_o, is.na( deci_posi_rate_o ), deci_rate_d ), 
-                           index0asylum = replace( index0asylum, is.na( index0asylum ), 0 )) %>%
+                           index0asylum = replace_na( index0asylum, 0 )) %>%
                    nest()
       
       # function to calculate new refugee, asylum seeker and vda stocks
@@ -689,16 +689,16 @@ server <- function( input, output, session ) {
       # unlist  
       dat_stock <- unnest( dat_stock, cols = c( data ))
       # select variables and rename 
-      dat_stock %>% select( iso_o, iso_d, year, ref, asy, vda ) %>% 
+      dat_stock %>% select( iso_o, iso_d, year, ref, asy, vda )  %>% 
                     filter( iso_o != "UKN" ) %>%
-                    mutate( vda = replace( vda, iso_o != "VEN", 0 )) %>% 
-                    rename( country_origin = iso_o, 
-                            country_asylum = iso_d, 
-                            refugee_stocks = ref, 
-                            asylum_stocks = asy, 
-                            venezuelans_stocks = vda ) %>% 
+                    mutate( vda = replace( vda, iso_o != "VEN", 0 )) %>%
+                    rename( country_origin = iso_o,
+                            country_asylum = iso_d,
+                            refugee_stocks = ref,
+                            asylum_stocks = asy,
+                            venezuelans_stocks = vda ) %>%
+                    ungroup() %>%
                     as.data.frame()
-      
    })
    
    ### table country of asylum 
@@ -708,6 +708,7 @@ server <- function( input, output, session ) {
    
    ### make display table 
    display <- reactive({
+      #browser()
       totals <- stock_host() %>% 
                 group_by( country_asylum, year ) %>% 
                 summarise( refugee_stocks = sum( refugee_stocks, na.rm = TRUE ), 
@@ -718,7 +719,7 @@ server <- function( input, output, session ) {
                 select( country_origin, country_asylum, year,
                         refugee_stocks, asylum_stocks, venezuelans_stocks ) 
       
-      top3 <- stock() %>% 
+      top3 <- stock_host() %>% 
               group_by( year ) %>% 
               top_n( 3, wt = get( input$top3 )) %>% 
               ungroup() 

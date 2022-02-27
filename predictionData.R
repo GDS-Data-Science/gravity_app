@@ -217,7 +217,7 @@ dat <- dat %>% mutate( typeOfViolence =
                         if_else( year < 2020 & best_est < 50, impute.zero( Nyear_conflict ), Nyear_conflict ))
 
 # replace missings with value of 2020 
-impute.2020 <- function(x) replace( x, c( 20:24 ), x[ c( 19 )])
+impute.2020 <- function(x) replace( x, c( 21:25 ), x[ c( 20 )])
 dat <- dat %>% group_by( ISO ) %>% 
                mutate( typeOfViolence = impute.2020( typeOfViolence ), 
                        best_est = impute.2020( best_est ), 
