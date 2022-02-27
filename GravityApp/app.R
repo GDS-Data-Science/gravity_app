@@ -453,8 +453,8 @@ server <- function( input, output, session ) {
                                              ". Percentage change:"))
       updateSelectInput( inputId = "civlibH", selected = default_values$CL_d )
       updateSelectInput( inputId = "polRH", selected = default_values$PR_d )
-      default_click <- impu22[[1]] %>% 
-                       filter( iso_d == isoHost() & iso_o == isoOrig(), year == input$year[1] ) %>%
+      default_click <- dat_stock %>% 
+                       filter( iso_d == isoHost() & iso_o == isoOrig(), year == as.numeric( input$year[1] )) %>%
                        select( index0asylum ) %>% 
                        distinct()
       updateCheckboxInput( inputId = "temAsyl", value = as.logical( default_click$index0asylum ))

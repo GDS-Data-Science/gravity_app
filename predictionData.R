@@ -307,7 +307,7 @@ est_dat <- est_dat %>% group_by( Id ) %>%
                                col45 = impute.mean( col45 ),
                                smctry = impute.mean( smctry ),
                                dist = impute.mean( dist ), 
-                               index0asylum = impute.mean( index0asylum )) %>% 
+                               index0asylum = round( impute.mean( index0asylum ), 0 )) %>% 
                        ungroup() %>% 
                        mutate( contig = impute.mean( contig ),
                                comlang_off = impute.mean( comlang_off ),
@@ -317,7 +317,7 @@ est_dat <- est_dat %>% group_by( Id ) %>%
                                col45 = impute.mean( col45 ),
                                smctry = impute.mean( smctry ),
                                dist = impute.mean( dist ), 
-                               index0asylum = impute.mean( index0asylum ))
+                               index0asylum = round( impute.mean( index0asylum ), 0 ))
 }
 
 # loop through list 
@@ -354,15 +354,8 @@ data_vda$percVDA <- data_vda$new_displaced/data_flow_sum$total
 data_vda <- select( data_vda, -c( year, new_displaced, VDA ))
 
 #### correct problems with index0asylum 
-data_flow$index0asylum <- ifelse( data_flow$index0asylum > 1, 1, data_flow$index0asylum )
-data_flow <- arrange( data_flow, Id )
-for( i in 1:nrow( data_flow )){
-   if( is.na( data_flow$index0asylum[i] )){
-      data_flow$index0asylum[i] <- data_flow$index0asylum[i - 1]
-   } else{
-      data_flow$index0asylum[i] <- data_flow$index0asylum[i]
-   }
-}
+data_deci_o$index0asylum[ data_deci_o$iso_o == "VEN" & data_deci_o$iso_d == "COL" ] <- 1 
+
 
 #### merge data sets 
 # merge 
