@@ -46,6 +46,7 @@ pre_newarrival <- data.frame( iso_o = impu22[[1]]$iso_o,
                               year = rep( 2021:2024, times = nrow( flow_predictions)/4 ),
                               var = round( rowMeans( flow_predictions ), 0 ))
 
+##### checks
 check1 <- pre_newarrival %>% group_by( year ) %>% summarise( tot = sum( var ))
 check2 <- pre_newarrival %>% group_by( iso_d, year ) %>% 
                              summarise( tot = sum( var )) %>% 
@@ -101,10 +102,7 @@ save( pred_stock, file = "../results/predictedStocks_Poisson_ind.Rdata" )
 save( pre_newarrival, file = "../results/predictedFlows_Poisson_ind.Rdata" )
 
 ##### checks 
-check1 <- pre_newarrival %>% group_by( year ) %>% 
-                             summarise( tot = sum( var ))
-
-check2 <- pred_stock %>% group_by( year ) %>% 
+check3 <- pred_stock %>% group_by( year ) %>% 
                          summarise( tot_ref = sum( refugee_stocks ), tot_asy = sum( asylum_stocks ))
 
 
