@@ -189,7 +189,7 @@ country_conflict <- country_conflict %>%
 country_newarrival <- country_newarrival %>% 
                       filter( !is.na( iso_o )) 
 
-country_newarrival$index0asylum[ country_newarrival$index0asylum < 1 ] <- 1
+country_newarrival$index0asylum[ country_newarrival$index0asylum > 1 ] <- 1
 
 
 #### merge data sets 
