@@ -3,3 +3,5 @@
 *.Rproj
 *.do
 .Rproj.user
+GravityApp/input_data/estimations.Rdata
+GravityApp/input_data/gravity.csv
