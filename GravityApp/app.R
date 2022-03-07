@@ -21,6 +21,7 @@ library( purrr )
 library( readr )
 library( readxl )
 library( shiny )
+library( shinyjs )
 library( shinythemes )
 library( shinyWidgets )
 library( tidyr )
@@ -37,13 +38,12 @@ load( "input_data/stock_calc.Rdata" )
 #============================ generate data set ================================
 
 # removing non-clustered countries
-impu22 <- lapply( impu22, 
+impu22 <- lapply( impu22,
                   function( x ) filter( x, !( iso_o %in% c( "ABW", "UVK", "MHL", "PLW", "PRI" )) &
                                            !( iso_d %in% c( "ATG", "BTN", "BRN", "CPV", "GNQ", "FSM", "MMR",
-                                                            "NRU", "ERI", "KIR", "UVK", "MAC", "MDV", "MHL", 
+                                                            "NRU", "ERI", "KIR", "UVK", "MAC", "MDV", "MHL",
                                                             "PRI", "WSM", "SMR", "STP", "SYC", "SLE", "SGP",
                                                             "LCA", "TWN", "TLS", "TON", "TKM", "TUV", "UZB" ))))
-
 
 # generate subset of dat for country of origin and host country 
 dat_o <- subset( dat, iso3 %in% impu22[[1]]$iso_o )
@@ -464,19 +464,28 @@ server <- function( input, output, session ) {
    iso_orig <- eventReactive( input$go, { dat$iso3[ dat$gis_name == input$orig ]})
    iso_host <- eventReactive( input$go, { dat$iso3[ dat$gis_name == input$host ]})  
  
-   ## reactive newdata
+   ### reactive newdata
    newdata <- eventReactive( input$go, {
+        # update prediction data
         newdata <- lapply( impu22, new_data )
+        
+        # add cluster 2019
+        for( i in 1:5 ){
+           newdata[[i]]$year <- factor( "2019",
+                                        levels = 2000:2021 )
+        }
         newdata 
    })
    
    ### predictions
    predictions <- reactive({
+      # browser()
+        # predict flow values 
         flow_predictions <- mapply( function( x, y ) 
                                     predict( x, newdata = y, type = "response" ), 
-                                             #se.fit = TRUE, interval="confidence" ),
-                                    x = est_models, y = newdata())
-        #round( rowMeans( flow_predictions ), 0 )
+                                    x = est_models_poisson, y = newdata())
+        
+        # create data frame
         pre_newarrival <- data.frame( iso_o = impu22[[1]]$iso_o, 
                                       iso_d = impu22[[1]]$iso_d, 
                                       year = impu22[[1]]$year,
@@ -484,7 +493,7 @@ server <- function( input, output, session ) {
         pre_newarrival
    })
    
-   ## calculate year totals for iso_d
+   ### calculate year totals for iso_d
    iso_d_totals <- reactive({
        predictions() %>% 
        group_by( iso_d, year ) %>% 
@@ -502,7 +511,7 @@ server <- function( input, output, session ) {
       
       data_line <- impu17[[1]] %>% 
                    select( iso_o, iso_d, year, newarrival ) %>% 
-                   filter( iso_o == iso_orig() & iso_d == iso_host()) %>%
+                   filter( iso_o == iso_orig() & iso_d == iso_host() & year %in% c( 2017:2021 )) %>%
                    rename( var = newarrival ) %>% 
                    bind_rows( data_pred )
       
@@ -733,6 +742,23 @@ server <- function( input, output, session ) {
       as.data.frame( view_table )
    })
    
+   ### disable download button as long as no data is loaded
+   # observe({
+   #    if( input$go > 0) {
+   #       Sys.sleep(1)
+   #       # enable the download button
+   #       shinyjs::enable( "downloadCsvhost" )
+   #       # change the html of the download button
+   #       shinyjs::html( "downloadCsvhost",
+   #                      sprintf( "<i class='fa fa-download'></i>
+   #                               Download (file size: %s)",
+   #                               round(runif(1, 1, 10000))
+   #                     )
+   #       )
+   #    }
+   # })
+   # 
+   
    ### download stock data all countries   
    output$downloadCsv <- downloadHandler(
       filename = function() {
@@ -742,14 +768,20 @@ server <- function( input, output, session ) {
          write.csv( stock(), file )
       })
    
+   
    ### download stock data country of asylum   
    output$downloadCsvhost <- downloadHandler(
       filename = function() {
          paste( "stock_data_country_asylum", ".csv", sep = "" )
       },
       content = function(file) {
-         write.csv( stock_host(), file )
-      })
+         write.csv( stock_host(), file ) 
+      }, 
+      contentType = "text/csv"
+      )
+   
+   # disable the downdload button on page load
+   #shinyjs::disable( "downloadCsvhost" )
    
    ### table display risk data  
    output$rawtable <- renderPrint({
