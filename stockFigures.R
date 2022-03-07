@@ -14,10 +14,10 @@ library( tidyr )
 
 ##### read in data
 load( "../Data/WorkData/stock_calc.Rdata" )
-#load( "../Results/estimations_poisson_join.Rdata" )
 load( "../Results/estimations_poisson_ind.Rdata" )
 load( "../Data/WorkData/impuData22.Rdata" )
-load( "../Results/rmcl.Rdata" )
+load( "../Data/WorkData/impuData17.Rdata" )
+
 
 ##### prediction of future flows
 ### remove missing clusters
@@ -26,11 +26,10 @@ impu22 <- lapply( impu22,
                   function( x ) filter( x, !( iso_o %in% c( "ABW", "UVK", "MHL", "PLW", "PRI" )) &
                                            !( iso_d %in% c( "ATG", "BTN", "BRN", "CPV", "GNQ", "FSM", "MMR",
                                                             "NRU", "ERI", "KIR", "UVK", "MAC", "MDV", "MHL",
-                                                            "PRI", "WSM", "SMR", "STP", "SYC", "SLE", "SGP",
+                                                            "PRI", "WSM", "SMR", "STP", "SYC", "SLE", "SGP", 
                                                             "LCA", "TWN", "TLS", "TON", "TKM", "TUV", "UZB" ))))
-# join
-# impu22 <- lapply( impu22, function( x ) filter( x, !( Id %in% rm_cl$Id )))
-
+ 
+sum21 <- impu22[[1]] %>% group_by( iso_d, year ) %>% summarise( tot21 = sum( newarrival ))
 
 ### add cluster 2019
 for( i in 1:5 ){
@@ -46,6 +45,11 @@ pre_newarrival <- data.frame( iso_o = impu22[[1]]$iso_o,
                               iso_d = impu22[[1]]$iso_d, 
                               year = rep( 2021:2024, times = nrow( flow_predictions)/4 ),
                               var = round( rowMeans( flow_predictions ), 0 ))
+
+check1 <- pre_newarrival %>% group_by( year ) %>% summarise( tot = sum( var ))
+check2 <- pre_newarrival %>% group_by( iso_d, year ) %>% 
+                             summarise( tot = sum( var )) %>% 
+                             left_join( sum21, by = c( "iso_d", "year" ))
 
 
 ##### calculation of stock figures 
