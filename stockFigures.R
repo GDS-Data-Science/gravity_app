@@ -8,28 +8,28 @@
 
 ##### load packages 
 library( dplyr )
-library( FENmlm )
+library( fixest )
 library( readr )
 library( tidyr )
 
 ##### read in data
 load( "../Data/WorkData/stock_calc.Rdata" )
-load( "../Results/estimations_poisson_join.Rdata" )
-#load( "../Results/estimations_poisson_ind.Rdata" )
+#load( "../Results/estimations_poisson_join.Rdata" )
+load( "../Results/estimations_poisson_ind.Rdata" )
 load( "../Data/WorkData/impuData22.Rdata" )
 load( "../Results/rmcl.Rdata" )
 
 ##### prediction of future flows
 ### remove missing clusters
 # ind
-# impu22 <- lapply( impu22,
-#                   function( x ) filter( x, !( iso_o %in% c( "ABW", "UVK", "MHL", "PLW", "PRI" )) &
-#                                            !( iso_d %in% c( "ATG", "BTN", "BRN", "CPV", "GNQ", "FSM", "MMR",
-#                                                             "NRU", "ERI", "KIR", "UVK", "MAC", "MDV", "MHL",
-#                                                             "PRI", "WSM", "SMR", "STP", "SYC", "SLE", "SGP",
-#                                                             "LCA", "TWN", "TLS", "TON", "TKM", "TUV", "UZB" ))))
+impu22 <- lapply( impu22,
+                  function( x ) filter( x, !( iso_o %in% c( "ABW", "UVK", "MHL", "PLW", "PRI" )) &
+                                           !( iso_d %in% c( "ATG", "BTN", "BRN", "CPV", "GNQ", "FSM", "MMR",
+                                                            "NRU", "ERI", "KIR", "UVK", "MAC", "MDV", "MHL",
+                                                            "PRI", "WSM", "SMR", "STP", "SYC", "SLE", "SGP",
+                                                            "LCA", "TWN", "TLS", "TON", "TKM", "TUV", "UZB" ))))
 # join
-impu22 <- lapply( impu22, function( x ) filter( x, !( Id %in% rm_cl$Id )))
+# impu22 <- lapply( impu22, function( x ) filter( x, !( Id %in% rm_cl$Id )))
 
 
 ### add cluster 2019
