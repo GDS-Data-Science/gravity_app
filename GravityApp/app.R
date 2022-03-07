@@ -13,7 +13,7 @@
 
 library( chorddiag )
 library( dplyr )
-library( FENmlm )
+library( fixest )
 library( haven )
 library( networkD3 )
 library( plotly )
@@ -49,19 +49,6 @@ impu22 <- lapply( impu22,
 dat_o <- subset( dat, iso3 %in% impu22[[1]]$iso_o )
 dat_d <- subset( dat, iso3 %in% impu22[[1]]$iso_d )
 
-# # generate factor variables 
-# for( i in 1:5 ){
-#    impu22[[i]] <- within( impu22[[i]], {
-#       CL_d_factor <- cut( CL_d, c( 1, 3, 6, 8 ), right = FALSE, 
-#                           labels = c( "free", "partfree", "nofree" ))
-#       CL_o_factor <- cut( CL_o, c( 1, 3, 6, 8 ), right = FALSE, 
-#                           labels = c( "free", "partfree", "nofree" ))
-#       PR_d_factor <- cut( PR_d, c( 1, 3, 6, 8 ), right = FALSE, 
-#                           labels = c( "free", "partfree", "nofree" ))
-#       PR_o_factor <- cut( PR_o, c( 1, 3, 6, 8 ), right = FALSE, 
-#                           labels = c( "free", "partfree", "nofree" ))
-#    })
-# }
 
 # country library drop down menu
 d_americas <- dat_d$gis_name[ dat_d$main_office == "Americas " ]
@@ -471,19 +458,24 @@ server <- function( input, output, session ) {
         
         # add cluster 2019
         for( i in 1:5 ){
-           newdata[[i]]$year <- factor( "2019",
-                                        levels = 2000:2021 )
+           newdata[[i]]$year <- 2019
         }
         newdata 
    })
    
    ### predictions
    predictions <- reactive({
-      # browser()
         # predict flow values 
-        flow_predictions <- mapply( function( x, y ) 
-                                    predict( x, newdata = y, type = "response" ), 
-                                    x = est_models_poisson, y = newdata())
+        nd <- newdata()
+        flow_predictions <- matrix( NA, nrow = nrow( nd[[1]] ), ncol = 5 ) 
+        for( i in 1:5 ) {
+           ddd <<- impu17[[i]]
+           x <- est_models_poisson[[i]]
+           x$call$data <- str2lang( "ddd" )
+           flow_predictions[ , i ] <- predict( x, newdata = nd[[i]], 
+                                               type = "response" )
+        }
+        rm( ddd, envir = globalenv() )
         
         # create data frame
         pre_newarrival <- data.frame( iso_o = impu22[[1]]$iso_o, 
