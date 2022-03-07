@@ -19,7 +19,6 @@ library( tidyr )
 library( viridis )
 
 #### read in data 
-#load( "C:/Users/PELLANDR/Dropbox/UNHCR (1)/Planning Figures/Database/UNHCR/impuData17.Rdata" )
 load( "../Data/WorkData/impuData17.Rdata" )
 
 #### run estimations
