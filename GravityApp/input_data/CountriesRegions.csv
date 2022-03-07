@@ -1,0 +1,229 @@
+iso3,proGres_code,gis_name,UNSD_name,main_office,main_office_short,hcr_region,hcr_subregion,code_op,excom,globalid
+AFG,AFG,Afghanistan,Afghanistan,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South-West Asia,AFG ABC,0,{C27A4F32-3F5E-4538-A910-3378F450D5F7}
+ALB,ALB,Albania,Albania,Europe,Europe,Europe,South-Eastern Europe,BIH RO ABC,0,{F957DB95-F377-4296-BCB4-E3D4D807A0AA}
+DZA,ALG,Algeria,Algeria,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,North Africa,DZA ABC,0,{673553C6-B70C-4BB9-A291-F7C7EAD9AB20}
+AND,AND,Andorra,Andorra,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",RBE,0,{AFDCBDF8-58F1-4C2D-B7A2-523738853D2B}
+AGO,ANG,Angola,Angola,Southern Africa,Southern Africa,Africa,Southern Africa,AGO ABC,0,{5387ED89-88FE-4B64-8D0A-358D91458EE2}
+AIA,AIA,Anguilla,Anguilla,Americas ,Americas ,Americas,North America and the Caribbean,,,
+ATA,ATA,Antarctica,Antarctica,,,,,,0,{C3D0ADC0-3792-4DD6-A697-8996D354C4C5}
+ATG,ANT,Antigua and Barbuda,Antigua and Barbuda,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{3FB9910C-086B-4D80-9E55-0EDD7E5DC599}
+ARG,ARG,Argentina,Argentina,Americas ,Americas ,Americas,Latin America,ARG RO ABC,0,{C895D1BE-4491-4662-90F1-F85888166270}
+ARM,ARM,Armenia,Armenia,Europe,Europe,Europe,Eastern Europe,GEO RO ABC,0,{0BAF0C5A-38A6-42C0-B5B8-FBF90AE583D3}
+ABW,ABW,Aruba (K. of the Netherland),Aruba,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{C58F8205-B9CA-4069-9606-8E241BC60C89}
+AUS,AUL,Australia,Australia,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{4148BF48-CCA6-44DB-8EAE-3CCF094DE28F}
+AUT,AUS,Austria,Austria,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",BEL RO ABC,0,{0C7A35B5-1F07-4964-ACA9-3BE06F898232}
+AZE,AZE,Azerbaijan,Azerbaijan,Europe,Europe,Europe,Eastern Europe,GEO RO ABC,0,{472C5827-5462-4798-A273-222FB185C8CF}
+BHS,BHS,Bahamas,Bahamas,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{8D9E3C3C-3F7D-4024-A3F6-08FF84E4A61A}
+BHR,BAH,Bahrain,Bahrain,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,SAU ABC,0,{A0516B38-183E-44B1-979E-B03E8F7BE2B0}
+BGD,BGD,Bangladesh,Bangladesh,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,BGD ABC,0,{AB3B89F1-4DF6-4348-981E-F73A9905EB8A}
+BRB,BAR,Barbados,Barbados,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{AFC63F55-9153-495C-9FEA-1DBB4C6FDD87}
+BLR,BLR,Belarus,Belarus,Europe,Europe,Europe,Eastern Europe,BLR ABC,0,{537F373A-88A8-4A49-B70D-D988471FB899}
+BEL,BEL,Belgium,Belgium,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",BEL RO ABC,0,{0BEF615B-0734-4460-9795-E4100F6FA4A3}
+BLZ,BZE,Belize,Belize,Americas ,Americas ,Americas,Latin America,PAN RO ABC,0,{2B31B920-4A97-4D55-A95F-F3225889AF9A}
+BEN,BEN,Benin,Benin,West and Central Africa,West and Central Africa,Africa,West Africa,SEN RO ABC,0,{5F5253B5-F5CC-4ECE-B7AD-085F4F002782}
+BMU,BER,Bermuda (GBR),Bermuda,Americas ,Americas ,The Americas,North America and the Caribbean,,0,{784A8CB2-ADA5-46D5-B7D1-1E6AE917B9E0}
+BTN,BHU,Bhutan,Bhutan,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA RO ABC,0,{773AC44B-F125-4167-B2F9-51E8C6A38C1C}
+BOL,BOL,Plurinational State of Bolivia,Bolivia (Plurinational State of),Americas ,Americas ,Americas,Latin America,ARG RO ABC,0,{C24E4E42-AA87-48F1-A677-670158A0FAFC}
+BES,BES,Bonaire Saint Eustatius and Saba (NLD),"Bonaire, Sint Eustatius and Saba",Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{814C4DD9-B21F-4C70-ABE6-07DF474A4DCB}
+BIH,BSN,Bosnia and Herzegovina,Bosnia and Herzegovina,Europe,Europe,Europe,South-Eastern Europe,BIH RO ABC,0,{3596E120-90EA-4D9B-8E2A-8CE4BA8E1982}
+BWA,BOT,Botswana,Botswana,Southern Africa,Southern Africa,Africa,Southern Africa,ZAF RO ABC,0,{67D63E86-AA0B-4B50-B872-5890B0CF0534}
+BRA,BRA,Brazil,Brazil,Americas ,Americas ,Americas,Latin America,BRA ABC,0,{2C41A287-2ECE-442F-83B7-5BF24F6B0BAB}
+VGB,BVI,British Virgin Islands (GBR),British Virgin Islands,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{911EF855-53C5-4063-92AB-57E92E92E693}
+BRN,BRU,Brunei Darussalam,Brunei Darussalam,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA RO ABC,0,{95FBD726-D404-4949-9EE0-5CAE665F911A}
+BGR,BUL,Bulgaria,Bulgaria,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",HUN RO ABC,0,{14994930-0CA1-421F-BD2F-C4C6641D4B1A}
+BFA,BKF,Burkina Faso,Burkina Faso,West and Central Africa,West and Central Africa,Africa,West Africa,BFA ABC,0,{091DA909-5F71-4E8E-A385-E148B6E379EF}
+BDI,BDI,Burundi,Burundi,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,Central Africa and the Great Lakes,BDI ABC,0,{D3C15C38-F484-4A59-B1CA-3E8E7D76E212}
+CPV,CVI,Cape Verde,Cabo Verde,West and Central Africa,West and Central Africa,Africa,West Africa,SEN RO ABC,0,{869F8D84-DA25-4893-A245-90AD88355B6D}
+KHM,CAM,Cambodia,Cambodia,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA RO ABC,0,{414A398A-2436-421C-B2EA-BE0277DD77CE}
+CMR,CMR,Cameroon,Cameroon,West and Central Africa,West and Central Africa,Africa,Central Africa and the Great Lakes,CMR ABC,0,{C57636A2-7F16-4C53-BC01-07F79F9C9BCF}
+CAN,CAN,Canada,Canada,Americas ,Americas ,Americas,North America and the Caribbean,CAN ABC,0,{5B2B1AC4-4872-4A23-A70B-488B481F3449}
+CYM,CAY,Cayman Islands,Cayman Islands,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{D4C6E0B4-A2E2-4803-A2AC-75DBAFD78982}
+CAF,CAR,Central African Republic,Central African Republic,West and Central Africa,West and Central Africa,Africa,Central Africa and the Great Lakes,CAF ABC,0,{17CC3DAF-D46A-4198-BD3F-E9454C8945FE}
+TCD,CHD,Rep. of Chad,Chad,West and Central Africa,West and Central Africa,Africa,East and Horn of Africa,TCD ABC,0,{74CDFA7F-ECFF-458E-A461-2070BC070454}
+CHL,CHL,Chile,Chile,Americas ,Americas ,Americas,Latin America,ARG RO ABC,0,{98814B24-C8DC-4D97-83C1-2ACB9AB6BE76}
+CHN,CHI,China,China,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,CHN RO ABC,0,{17CBE47E-C6EB-4122-8AD6-25C33631D7EB}
+HKG,HKG,Hong Kong (CHN),"China, Hong Kong Special Administrative Region",Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,CHN RO ABC,0,{3D73C6D3-3F72-45D6-8501-A1041B01E416}
+MAC,MAC,Macao (CHN),"China, Macao Special Administrative Region",Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,CHN RO ABC,0,{C55D9481-17D7-4F27-8C5E-3E31A9177925}
+COL,COL,Colombia,Colombia,Americas ,Americas ,Americas,Latin America,COL ABC,0,{AE6760E7-424B-4E65-98C6-3E3F2C5CE26A}
+COM,COI,Comoros,Comoros,Southern Africa,Southern Africa,Africa,Southern Africa,ZAF RO ABC,0,{30C5BFC7-53F6-42D8-BB6F-973D177D0AF3}
+COG,COB,Republic of the Congo,Congo,Southern Africa,Southern Africa,Africa,Central Africa and the Great Lakes,COG ABC,0,{09B8C10B-7F19-4853-BD1B-A1E2A77B6FB8}
+COK,COK,Cook Islands,Cook Islands,Asia and the Pacific,Asia and the Pacific,Asia,East Asia and the Pacific,,0,{58D820B6-9A2E-441E-B9E0-AA837E56FA49}
+CRI,COS,Costa Rica,Costa Rica,Americas ,Americas ,Americas,Latin America,CRI ABC,0,{FC01F3D8-A066-415D-ABC4-9AA7BFF7F7FD}
+CIV,ICO,Côte d'Ivoire,Côte d'Ivoire,West and Central Africa,West and Central Africa,Africa,West Africa,CIV ABC,0,{FCA83B8A-B730-4BF6-9B17-541D91476D6B}
+HRV,HRV,Croatia,Croatia,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",HUN RO ABC,0,{846A0060-5485-46D5-A7E3-C2456623ACE6}
+CUB,CUB,Cuba,Cuba,Americas ,Americas ,Americas,Latin America,PAN RO ABC,0,{5D34BC4B-AAD1-4B28-815D-1C55B3199037}
+CUW,CUW,Curaçao (K. of the Netherland),Curaçao,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{B6FAC5D4-77B9-4012-8EA0-E90F5C2E6F69}
+CYP,CYP,Cyprus,Cyprus,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",ITA RO ABC,0,{F01D14C6-EEA7-486B-B5A0-A92D26CA0731}
+CZE,CZE,Czech Republic,Czechia,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",HUN RO ABC,0,{29E1884C-9D91-40DC-B164-E392D5EF681D}
+PRK,KRN,Democratic People's Rep. of Korea,Democratic People's Republic of Korea,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA RO ABC,0,{F05C438D-82E3-4F15-A381-02CCBB943FF1}
+COD,COD,Democratic Republic of the Congo,Democratic Republic of the Congo,Southern Africa,Southern Africa,Africa,Central Africa and the Great Lakes,COD RO ABC,0,{CABF96E7-C2B2-4A13-A876-450556931A9D}
+DNK,DEN,Denmark,Denmark,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",SWE RO ABC,0,{90BAE95F-CEA3-498B-8B4C-5547074CF20A}
+DJI,DJB,Djibouti,Djibouti,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,East and Horn of Africa,DJI ABC,0,{9BD138B5-7BCD-4272-9198-4DB44DD3C12B}
+DMA,DMA,Dominica,Dominica,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{FF3B731C-995E-4482-95A5-2FC513281B9A}
+DOM,DOM,Dominican Republic,Dominican Republic,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{65B41946-1138-40E9-81B9-BEDC1D5CEC18}
+ECU,ECU,Ecuador,Ecuador,Americas ,Americas ,Americas,Latin America,ECU ABC,0,{6ED274EB-1C03-469E-9B96-7D3AA5E78E66}
+EGY,ARE,Egypt,Egypt,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,North Africa,EGY ABC,0,{050D3B8B-042A-4D00-853E-BB7D09253BC1}
+SLV,SAL,El Salvador,El Salvador,Americas ,Americas ,Americas,Latin America,PAN RO ABC,0,{37C9C83A-293E-4174-BC24-9494CF1E9A91}
+GNQ,EGU,Equatorial Guinea,Equatorial Guinea,West and Central Africa,West and Central Africa,Africa,Central Africa and the Great Lakes,COD RO ABC,0,{BAD750AC-1606-4A2C-8423-BC044AD5BDD2}
+ERI,ERT,Eritrea,Eritrea,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,East and Horn of Africa,ERI ABC,0,{9E9CDC39-F63D-466B-A977-B5FE67E15C87}
+EST,EST,Estonia,Estonia,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",SWE RO ABC,0,{40197A08-0287-474A-A217-456D7F083D34}
+SWZ,SWA,Eswatini,Eswatini,Southern Africa,Southern Africa,Africa,Southern Africa,ZAF RO ABC,0,{57395523-0EBE-4FA0-AED4-C96DF08B457F}
+ETH,ETH,Ethiopia,Ethiopia,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,East and Horn of Africa,ETH ABC,0,{CF38BEF6-0145-4E68-BF3D-69A33FD503F2}
+FLK,FLK,Falkland Islands (Malvinas),Falkland Islands (Malvinas),Americas ,Americas ,The Americas,Latin America,RBAC,0,{A4E7044C-F44C-40B0-8E13-9061268F3200}
+FRO,FRO,Faeroe Islands (DNK),Faroe Islands,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",RBE,0,{7A21BDD2-A32C-44ED-A8BA-D2E065FC63A3}
+FJI,FIJ,Fiji,Fiji,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{A3DB1718-682C-4817-BA81-335F57072A16}
+FIN,FIN,Finland,Finland,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",SWE RO ABC,0,{2544F1C2-DA7A-4B0F-B5F9-878EC7F81664}
+FRA,FRA,France,France,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",FRA ABC,0,{D3870EDF-52D1-48F6-A854-C08FEA066F6B}
+GUF,FGU,French Guiana (FRA),French Guiana,Americas ,Americas ,The Americas,North America and the Caribbean,RBAC,0,{6920E93D-2447-4AC8-85DB-B55E794605DD}
+PYF,FPO,French Polynesia (FRA),French Polynesia,Asia and the Pacific,Asia and the Pacific,Asia,East Asia and the Pacific,,0,{4463985C-F59B-4558-AF47-33D8C1F01ECC}
+ATF,ATF,French Southern and Antarctic Territories (FRA),French Southern Territories,,,,,,0,{4BCFB660-3539-4956-960A-EB90AFE511D0}
+GAB,GAB,Gabon,Gabon,West and Central Africa,West and Central Africa,Africa,Central Africa and the Great Lakes,COD RO ABC,0,{C10B1524-C0A5-45B5-AFB9-AC5D2BDD6AAF}
+GMB,GAM,Gambia,Gambia,West and Central Africa,West and Central Africa,Africa,West Africa,SEN RO ABC,0,{72F3ADCA-983A-407E-B693-F889B4317852}
+GEO,GEO,Georgia,Georgia,Europe,Europe,Europe,Eastern Europe,GEO RO ABC,0,{1DB74E99-7E18-4D81-81C0-4D05E8F60A7B}
+DEU,GFR,Germany,Germany,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",DEU ABC,0,{E1F9A106-69DB-48C8-ADF5-967F97B8D2CD}
+GHA,GHA,Ghana,Ghana,West and Central Africa,West and Central Africa,Africa,West Africa,GHA ABC,0,{CAF08331-4AA9-489E-AAEF-CD8B4F055B4C}
+GRC,GRE,Greece,Greece,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",GRC ABC,0,{5D7F1DF7-02B5-42E9-B9F3-FF7F93ED9966}
+GRL,GRL,Greenland (DNK),Greenland,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",RBE,0,{628A85BA-12D0-453C-A3D7-AAE7D5E2E291}
+GRD,GRN,Grenada,Grenada,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{184CCD76-AF6B-4416-BFB4-05D527F3F75C}
+GLP,GLP,Guadeloupe (FRA),Guadeloupe,Americas ,Americas ,The Americas,North America and the Caribbean,,0,{0CDB651B-8B62-4B72-87F3-366B16D46934}
+GTM,GUA,Guatemala,Guatemala,Americas ,Americas ,Americas,Latin America,PAN RO ABC,0,{71109ACC-C6E1-48CD-8CFF-B7B63520DED6}
+GIN,GUI,Guinea,Guinea,West and Central Africa,West and Central Africa,Africa,West Africa,SEN RO ABC,0,{0DD29252-0FC4-4025-A6FE-42C4EF6AF827}
+GNB,GNB,Guinea-Bissau,Guinea-Bissau,West and Central Africa,West and Central Africa,Africa,West Africa,SEN RO ABC,0,{C4FBD128-D56B-480F-99FD-EA4CF5698985}
+GUY,GUY,Guyana,Guyana,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{CCC59F60-8A7F-4311-B5C7-A0C92007311A}
+HTI,HAI,Haiti,Haiti,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{CF51A4B0-BEDE-44F9-918C-BE3DECB2891A}
+VAT,VAT,Holy See,Holy See,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",RBE,0,{65D7E57A-5B0E-4CF5-8F09-935668A23B34}
+HND,HON,Honduras,Honduras,Americas ,Americas ,Americas,Latin America,PAN RO ABC,0,{254B2020-B58D-4C6C-BBCB-FF609A75C905}
+HUN,HUN,Hungary,Hungary,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",HUN RO ABC,0,{39D0482E-60EF-41F7-8CD7-9D53D2CE5396}
+ISL,ICE,Iceland,Iceland,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",SWE RO ABC,0,{629A37C1-C8B9-49FB-8362-107C29E16FAC}
+IND,IND,India,India,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South Asia,IND ABC,0,{01219D08-42B9-4A71-869B-6AEC17A071F7}
+IDN,INS,Indonesia,Indonesia,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,IDN ABC,0,{83D80A24-EBC2-4B20-85DC-0B8A70AC58B7}
+IRN,IRN,Islamic Republic of Iran,Iran (Islamic Republic of),Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South-West Asia,IRN ABC,0,{B496B57E-0A82-4323-8EB8-2431AC9D7D2E}
+IRQ,IRQ,Iraq,Iraq,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,IRQ ABC,0,{942791AF-721D-4E31-B17E-73C8C4FAC2F9}
+IRL,IRE,Ireland,Ireland,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",BEL RO ABC,0,{ED3A9BF6-1B18-478A-8ACB-F64E5391903F}
+ISR,ISR,Israel,Israel,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,ISR ABC,0,{1B333574-0E36-450E-95B8-5B766C38B767}
+ITA,ITA,Italy,Italy,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",ITA RO ABC,0,{A09839A1-856D-4CD5-8DB1-7F503F0C69E4}
+JAM,JAM,Jamaica,Jamaica,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{C8EA30A8-1480-4A2F-BF01-0B319893BA70}
+JPN,JPN,Japan,Japan,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,JPN ABC,0,{41556FCC-462E-40B7-B81E-3F63C2B00FDA}
+JOR,JOR,Jordan,Jordan,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,JOR ABC,0,{A15E5EC6-772A-4954-93AC-70D114F302ED}
+KAZ,KAZ,Kazakhstan,Kazakhstan,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,Central Asia,KAZ RO ABC,0,{04C8A3FF-EECA-4E9F-9510-745762A1B489}
+KEN,KEN,Kenya,Kenya,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,East and Horn of Africa,KEN ABC,0,{4F2A8E08-B314-4466-A47F-C0FC0FAEFCFE}
+KIR,KIR,Kiribati,Kiribati,Asia and the Pacific,Asia and the Pacific,Asia,East Asia and the Pacific,,0,{2B3723B0-4342-4D56-A530-69A5F736E16C}
+XKX,KOS,Kosovo,Kosovo,Europe,Europe,Europe,South-Eastern Europe,,0,
+KWT,KUW,Kuwait,Kuwait,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,SAU ABC,0,{58314645-9FF9-4D4F-84C3-3C849BE43583}
+KGZ,KGZ,Kyrgyzstan,Kyrgyzstan,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,Central Asia,KGZ ABC,0,{8DC54F6D-4CAD-4EE4-BA4C-9386F12D3123}
+LAO,LAO,Lao People's Democratic Republic,Lao People's Democratic Republic,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA RO ABC,0,{CC4E8C05-0E1C-4D4E-9E88-35EFE7562127}
+LVA,LVA,Latvia,Latvia,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",SWE RO ABC,0,{199D343A-98F6-438B-A574-89A80C7277B9}
+LBN,LEB,Lebanon,Lebanon,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,LBN ABC,0,{349F1317-F628-4A92-BCB8-0D7A80033C82}
+LSO,LES,Lesotho,Lesotho,Southern Africa,Southern Africa,Africa,Southern Africa,ZAF RO ABC,0,{892869F2-5AE1-4BF0-9723-E9EE938EBB64}
+LBR,LBR,Liberia,Liberia,West and Central Africa,West and Central Africa,Africa,West Africa,LBR ABC,0,{9B0A9726-6952-44B0-8E65-74E306286116}
+LBY,LBY,Libya,Libya,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,North Africa,LBY ABC,0,{D4A847D2-98E0-4459-8DC1-17236BEAB9E8}
+LIE,LIE,Liechtenstein,Liechtenstein,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",BEL RO ABC,0,{FF98E251-D293-447A-9773-497E9CBB9D15}
+LTU,LTU,Lithuania,Lithuania,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",SWE RO ABC,0,{72A8E462-5132-472E-9BBE-EA399C33F345}
+LUX,LUX,Luxembourg,Luxembourg,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",BEL RO ABC,0,{DFDA3C6D-1EC8-4767-B8FC-94546BA0CD3C}
+MDG,MAD,Madagascar,Madagascar,Southern Africa,Southern Africa,Africa,Southern Africa,ZAF RO ABC,0,{3F24B173-E2F7-4518-901E-38C980E94B06}
+MWI,MLW,Malawi,Malawi,Southern Africa,Southern Africa,Africa,Southern Africa,MWI ABC,0,{7D9EF118-1CA3-4F94-A357-2739F522156A}
+MYS,MLS,Malaysia,Malaysia,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,MYS ABC,0,{949567D4-B1B1-450F-88EF-C5AC7A5F3EE6}
+MDV,MDV,Maldives,Maldives,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA RO ABC,0,{4255D83C-3CDF-4055-916D-82207CB28842}
+MLI,MLI,Mali,Mali,West and Central Africa,West and Central Africa,Africa,West Africa,MLI ABC,0,{1E2876D8-2ABF-4E86-BC0C-BBDD64651566}
+MLT,MTA,Malta,Malta,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",ITA RO ABC,0,{897E4870-E075-44CA-AB89-2687CAC02B30}
+MHL,MHL,Marshall Islands,Marshall Islands,Asia and the Pacific,Asia and the Pacific,Asia,East Asia and the Pacific,,0,{FA2DEB4E-8910-4E42-B2A0-2F35A2D7AEC8}
+MTQ,MAR,Martinique (FRA),Martinique,Americas ,Americas ,The Americas,North America and the Caribbean,,0,{809879D8-9954-4266-87B4-8A13990BC9FA}
+MRT,MAU,Mauritania,Mauritania,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,North Africa,MRT ABC,0,{71934B9D-1FCA-4013-ADBC-F7F8811362D1}
+MUS,MTS,Mauritius,Mauritius,Southern Africa,Southern Africa,Africa,Southern Africa,ZAF RO ABC,0,{AC66C105-2C09-4CE2-8C03-BDAA3F364420}
+MEX,MEX,Mexico,Mexico,Americas ,Americas ,Americas,Latin America,MEX ABC,0,{231457B7-EC13-4472-A1C4-83BE02A532B2}
+FSM,FSM,Federated States of Micronesia,Micronesia (Federated States of),Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{9D019972-F93E-4EF9-AA87-F58CE9C14101}
+MCO,MCO,Monaco,Monaco,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",FRA ABC,0,{6A13CAB1-BB2D-46D5-A5F5-C44539CFF202}
+MNG,MNG,Mongolia,Mongolia,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA RO ABC,0,{DE6B741D-5272-4C0A-903A-0B9D4FD74438}
+MNE,MNE,Montenegro,Montenegro,Europe,Europe,Europe,South-Eastern Europe,BIH RO ABC,0,{ECFB6B46-AC37-4834-8E13-CF87F41C75A6}
+MSR,MSR,Montserrat,Montserrat,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{5ACBF778-8673-43FF-9BA4-D73AFB8A7A15}
+MAR,MOR,Morocco,Morocco,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,North Africa,MAR ABC,0,{B7C36CA5-24FB-480E-B523-5AAFBB47D849}
+MOZ,MOZ,Mozambique,Mozambique,Southern Africa,Southern Africa,Africa,Southern Africa,MOZ ABC,0,{C0855A25-7531-4D45-9979-7DB636B4CFC6}
+MMR,MYA,Myanmar,Myanmar,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,MMR ABC,0,{58A108B5-A9D1-4CFF-B0B3-5C7F28E64CA5}
+NAM,NAM,Namibia,Namibia,Southern Africa,Southern Africa,Africa,Southern Africa,ZAF RO ABC,0,{494FAC65-2286-4865-97D6-95F8076D9F53}
+NRU,NRU,Nauru,Nauru,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{79723723-97FD-48C4-B37C-70F9E12CE1EC}
+NPL,NEP,Nepal,Nepal,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South Asia,NPL ABC,0,{308DD90D-4D79-45DC-9EE2-853D8BE2D0E8}
+NLD,NET,Netherlands,Netherlands,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",BEL RO ABC,0,{70AE3BAF-79AD-4CDA-9D59-990599C292B8}
+NCL,FNC,French New Caledonia (FRA),New Caledonia,Asia and the Pacific,Asia and the Pacific,Asia,East Asia and the Pacific,RBAP,0,{FBBFA340-F4E5-4DB7-A5F8-321FCF1EA632}
+NZL,NZL,New Zealand,New Zealand,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{256E1B22-20C1-45CA-B0DB-30E0E4AFDC39}
+NIC,NIC,Nicaragua,Nicaragua,Americas ,Americas ,Americas,Latin America,PAN RO ABC,0,{654D283F-AC3A-4057-9F10-960C695FA7BC}
+NER,NGR,Niger,Niger,West and Central Africa,West and Central Africa,Africa,West Africa,NER ABC,0,{0CF9B77A-97F6-4010-9990-7703BD412C64}
+NGA,NIG,Nigeria,Nigeria,West and Central Africa,West and Central Africa,Africa,West Africa,NGA ABC,0,{3B100A97-3FB0-4E9F-BD49-62C4DC72E8E0}
+NIU,NIU,Niue,Niue,Asia and the Pacific,Asia and the Pacific,Asia,East Asia and the Pacific,,0,{FBA1290B-3810-42DD-8A07-991F7F0CB8DE}
+MKD,MCD,North Macedonia,North Macedonia,Europe,Europe,Europe,South-Eastern Europe,BIH RO ABC,0,{4837B93B-39C9-4515-98E1-C9AEC4EB87FE}
+MNP,MNP,Northern Mariana Islands (USA),Northern Mariana Islands,Asia and the Pacific,Asia and the Pacific,Asia,East Asia and the Pacific,,0,{CA6CA428-9E5E-4C0F-8C9A-731556448850}
+NOR,NOR,Norway,Norway,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",SWE RO ABC,0,{213DD95A-3A90-4C65-960B-B014BDBDFFFB}
+OMN,OMN,Oman,Oman,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,SAU ABC,0,{DAE9B71E-645D-429F-9B3B-9ACD40D81DDB}
+PAK,PAK,Pakistan,Pakistan,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South-West Asia,PAK ABC,0,{308BC770-E5A8-49A1-9DDC-0EAFEAC7903A}
+PLW,PLW,Palau,Palau,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{6EBBC92D-F9CA-4C83-AECF-948032F47E97}
+PAN,PAN,Panama,Panama,Americas ,Americas ,Americas,Latin America,PAN RO ABC,0,{8068708F-96CB-464F-91CC-6EB5B1D77A3B}
+PNG,PNG,Papua New Guinea,Papua New Guinea,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{10D0AD95-094A-4402-812D-00F845A6B7BB}
+PRY,PAR,Paraguay,Paraguay,Americas ,Americas ,Americas,Latin America,ARG RO ABC,0,{C8E3C162-9AA0-4E8F-8668-A65686FBCA37}
+PER,PER,Peru,Peru,Americas ,Americas ,Americas,Latin America,PER ABC,0,{F0FF6E56-2A80-444B-BF2A-2BE3BADFBB77}
+PHL,PHI,Philippines,Philippines,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,PHL ABC,0,{9F5A73B9-8652-4EEC-A42E-DA420FC8171F}
+POL,POL,Poland,Poland,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",HUN RO ABC,0,{CD16924F-24D7-4AFC-8EE8-318A7341C386}
+PRT,POR,Portugal,Portugal,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",ITA RO ABC,0,{0D8985EC-4A19-4987-9DE9-6C175D615F86}
+PRI,PUE,Puerto Rico (USA),Puerto Rico,Americas ,Americas ,The Americas,North America and the Caribbean,RBAC,0,{09AB191C-FF3E-4090-B667-B0153431D711}
+QAT,QAT,Qatar,Qatar,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,SAU ABC,0,{7F578AF6-41E5-4B6A-886A-C4B2D593ED9B}
+KOR,KOR,Republic of Korea,Republic of Korea,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,KOR ABC,0,{F5C8C3A0-CCE1-4015-A828-4C1AAEE91295}
+MDA,MDA,Republic of Moldova,Republic of Moldova,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",HUN RO ABC,0,{AD2A5A17-F11E-4AF1-A107-03FD774AAD7B}
+REU,REU,Reunion (FRA),Réunion,Southern Africa,Southern Africa,Africa,Southern Africa,,0,{F2AECAFE-639C-466C-8DA1-BFBB4FBC32A6}
+ROU,ROM,Romania,Romania,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",HUN RO ABC,0,{A80C3B81-63A6-4DEB-A7F2-23A58C6A71F8}
+RUS,RUS,Russian Federation,Russian Federation,Europe,Europe,Europe,Eastern Europe,RUS ABC,0,{DC8D8C5C-1B96-4547-92B5-460F500ADF95}
+RWA,RWA,Rwanda,Rwanda,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,Central Africa and the Great Lakes,RWA ABC,0,{4022A332-4C29-4896-85A5-A3A30F1565A4}
+KNA,STK,Saint Kitts and Nevis,Saint Kitts and Nevis,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{F898C266-3F28-4E29-BE28-C8E26022A67A}
+LCA,LCA,Saint Lucia,Saint Lucia,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{05339379-15AA-4F53-A3A9-8FDE66A22271}
+MAF,MAF,Saint Martin (FRA),Saint Martin (French Part),Americas ,Americas ,The Americas,North America and the Caribbean,RBAC,0,{7920F978-841A-45C4-9D66-F50742CCCB69}
+VCT,VCT,Saint Vincent and the Grenadines,Saint Vincent and the Grenadines,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{D3380BA1-6DF8-47A8-B872-0C3BE3641F73}
+WSM,WES,Samoa,Samoa,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{91C5399D-EE75-4407-92EC-0A6E7DC55C81}
+SMR,SMA,San Marino,San Marino,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",RBE,0,{AD6B9C24-6647-453A-A97A-1B98E3A4A625}
+STP,STP,Sao Tome and Principe,Sao Tome and Principe,West and Central Africa,West and Central Africa,Africa,Central Africa and the Great Lakes,COD RO ABC,0,{27A1EB71-7F04-47DA-B77F-0B7EFD75470E}
+SAU,SAU,Saudi Arabia,Saudi Arabia,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,SAU ABC,0,{35E21239-5F17-44F6-A925-6568AD6C6527}
+SEN,SEN,Senegal,Senegal,West and Central Africa,West and Central Africa,Africa,West Africa,SEN RO ABC,0,{0B2D64A5-9688-473F-841B-56A13BFC8288}
+SRB,SRB,Serbia*,Serbia,Europe,Europe,Europe,South-Eastern Europe,BIH RO ABC,0,{249239AA-ED76-4A7F-BB7F-77346A276397}
+SYC,SEY,Seychelles,Seychelles,Southern Africa,Southern Africa,Africa,Southern Africa,ZAF RO ABC,0,{447998FD-B20A-4FAC-8F17-9547DA3D0640}
+SLE,SLE,Sierra Leone,Sierra Leone,West and Central Africa,West and Central Africa,Africa,West Africa,SEN RO ABC,0,{1B94120E-897C-4B7E-AECC-23DBDFAD5FB9}
+SGP,SIN,Singapore,Singapore,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA RO ABC,0,{CDD444E3-C580-4F3E-9B0B-AD572A0DBB25}
+SXM,SXM,Sint Maarten (K. of the Netherland),Sint Maarten (Dutch part),Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{A222BC2E-DA13-4672-ABDE-3BD566EB24C5}
+SVK,SVK,Slovakia,Slovakia,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",HUN RO ABC,0,{F90E652F-9703-4498-91CC-2D0CF3C23F67}
+SVN,SVN,Slovenia,Slovenia,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",HUN RO ABC,0,{8AD40906-6499-4D6C-910C-1CC6F9A5327D}
+SLB,SOL,Solomon Islands,Solomon Islands,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{C6F522C2-2286-4363-898B-C98E6D6E92CC}
+SOM,SOM,Somalia,Somalia,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,East and Horn of Africa,SOM ABC,0,{2F24FF48-4A27-440E-9FE6-1FBCDF59E929}
+ZAF,RSA,South Africa,South Africa,Southern Africa,Southern Africa,Africa,Southern Africa,ZAF RO ABC,0,{D121B258-51B6-4D5C-BFDC-B897C66C4D2B}
+SGS,SGS,South Georgia and the South Sandwich Islands (GBR),South Georgia and the South Sandwich Islands,Americas ,Americas ,The Americas,North America and the Caribbean,RBAC,0,{0AC5CE35-1AF6-4FA9-B22B-FC497E9F7E53}
+SSD,SSD,South Sudan,South Sudan,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,East and Horn of Africa,SSD ABC,0,{EDC7E3F3-64F9-4D60-AC2E-102E79158C4B}
+ESP,SPA,Spain,Spain,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",ITA RO ABC,0,{95413AF1-FA16-4EC2-9422-A35B3E219265}
+LKA,LKA,Sri Lanka,Sri Lanka,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South Asia,LKA ABC,0,{DCDF1274-E072-4E8D-B434-95A4860F47A5}
+PSE,GAZ,State of Palestine,State of Palestine,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,ISR ABC,0,{19F4A484-4887-4AB5-9922-7E9FD26A915E}
+SDN,SUD,Sudan,Sudan,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,East and Horn of Africa,SDN ABC,0,{58358115-E0AE-4BF9-A137-B4D65834EAA2}
+SUR,SUR,Suriname,Suriname,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{A3E2AFB6-1F9D-45F5-AEED-C4B58869216C}
+SJM,SJM,Svalbard and Jan Mayen Islands (NOR),Svalbard and Jan Mayen Islands,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",RBE,0,{FE0B78EF-4BC8-44AD-816C-DF31A1ABBC93}
+SWE,SWE,Sweden,Sweden,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",SWE RO ABC,0,{9F2098A0-9BE2-4BD0-AD70-8AD900279A75}
+CHE,SWI,Switzerland,Switzerland,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",BEL RO ABC,0,{11DC71B1-10C3-428C-B207-109C6969F5D1}
+SYR,SYR,Syrian Arab Republic,Syrian Arab Republic,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,SYR ABC,0,{3A630B87-0BE5-4736-98CB-F760CD28B4ED}
+TJK,TJK,Tajikistan,Tajikistan,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,Central Asia,TJK ABC,0,{943A70D3-2893-4385-9B2F-6455C4FBFA40}
+THA,THA,Thailand,Thailand,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA ABC,0,{219BB312-E4BD-4080-8A48-D9752FA0E5F5}
+TLS,TMP,Timor-Leste,Timor-Leste,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA RO ABC,0,{182F4930-E9EF-4E15-85DA-E88155F74464}
+TGO,TOG,Togo,Togo,West and Central Africa,West and Central Africa,Africa,West Africa,SEN RO ABC,0,{6F6706FD-BAC9-476C-BD21-5EF3DCC2CF92}
+TON,TON,Tonga,Tonga,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{FA8979CD-ABD8-4B3A-8A8D-35A6E8F07CD5}
+TTO,TRT,Trinidad and Tobago,Trinidad and Tobago,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{C8C0A909-931E-4D31-B581-530E986A9D20}
+TUN,TUN,Tunisia,Tunisia,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,North Africa,TUN ABC,0,{3A80A10F-471B-438A-9362-83EEFD3D562E}
+TUR,TUR,Turkey,Turkey,Europe,Europe,Europe,Eastern Europe,TUR ABC,0,{412A83B4-9D25-4714-B9CD-FE1B8849D0D4}
+TKM,TKM,Turkmenistan,Turkmenistan,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,Central Asia,KAZ RO ABC,0,{D64760CC-034F-45FB-BD17-D31CBB61CCDC}
+TCA,TCI,Turks and Caicos Islands (GBR),Turks and Caicos Islands,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{7D18FAEB-C9C5-4173-99CD-5A43A8A47B1F}
+TUV,TUV,Tuvalu,Tuvalu,Asia and the Pacific,Asia and the Pacific,Asia,East Asia and the Pacific,,0,{AC158112-ECA3-4B26-BDA5-9AA026A45BBF}
+UGA,UGA,Uganda,Uganda,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,East and Horn of Africa,UGA ABC,0,{87A4B42C-43EE-4943-9990-1DE42E33AC0E}
+UKR,UKR,Ukraine,Ukraine,Europe,Europe,Europe,Eastern Europe,UKR ABC,0,{A14AF3E0-A29F-443C-A154-166F4D691450}
+ARE,UAE,United Arab Emirates,United Arab Emirates,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,SAU ABC,0,{C9DFE21F-1231-408D-A742-9E87A29C627B}
+GBR,GBR,United Kingdom of Great Britain and Northern Ireland,United Kingdom of Great Britain and Northern Ireland,Europe,Europe,Europe,"Northern, Western, Central and Southern Europe",GBR ABC,0,{39D38231-71AD-43AD-AFCB-23A0109492C0}
+TZA,TAN,United Republic of Tanzania,United Republic of Tanzania,"East and Horn of Africa, and Great Lakes","East and Horn of Africa, and Great Lakes",Africa,Central Africa and the Great Lakes,TZA ABC,0,{697F3F7A-F194-42A1-A78A-76B8844AD67F}
+USA,USA,United States of America,United States of America,Americas ,Americas ,Americas,North America and the Caribbean,USA RO ABC,0,{11F585B9-B42E-4981-ABF1-B1C25FC34F75}
+URY,URU,Uruguay,Uruguay,Americas ,Americas ,Americas,Latin America,ARG RO ABC,0,{878775EE-2C00-4FD5-A987-8FD13554B3A7}
+UZB,UZB,Uzbekistan,Uzbekistan,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,Central Asia,KAZ RO ABC,0,{F44664B1-90CD-4972-AC8C-0856D8EBCB24}
+VUT,VAN,Vanuatu,Vanuatu,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,East Asia and the Pacific,AUS RO ABC,0,{9EBB2FB4-29A3-4FBE-AFCF-98D240A80204}
+VEN,VEN,Bolivarian Republic of Venezuela,Venezuela (Bolivarian Republic of),Americas ,Americas ,Americas,Latin America,VEN ABC,0,{9C53F4C3-1773-4081-8E22-5D99A8D3F11D}
+VNM,SRV,Viet Nam,Viet Nam,Asia and the Pacific,Asia and the Pacific,Asia and the Pacific,South East Asia,THA RO ABC,0,{8761ACB9-39FB-4797-932C-F09BD9F9A496}
+ESH,WSH,Western Sahara,Western Sahara,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,North Africa,ESH ABC,0,{4E800B51-E782-4F7E-BF5D-4CBA2FD7FAE2}
+YEM,YEM,Yemen,Yemen,Middle East and North Africa,Middle East and North Africa,Middle East and North Africa,Middle East,YEM ABC,0,{D645B3CD-DB8F-4186-B175-A989B8DCDE51}
+ZMB,ZAM,Zambia,Zambia,Southern Africa,Southern Africa,Africa,Southern Africa,ZMB ABC,0,{B057B9B3-A262-46A0-B3D3-7D5A26513FD9}
+ZWE,ZIM,Zimbabwe,Zimbabwe,Southern Africa,Southern Africa,Africa,Southern Africa,ZWE ABC,0,{2527DC46-0E95-4618-90A6-19EC6E7B5212}
+TWN,TWN,Taiwan (CHN),,Asia and the Pacific,Asia and the Pacific,Asia,East Asia and the Pacific,,0,{282E9F17-E0A1-45A1-A614-EEB23B263960}
