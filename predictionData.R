@@ -187,8 +187,9 @@ country_conflict <- country_conflict %>%
 ## country_newarrival
 # select variables 
 country_newarrival <- country_newarrival %>% 
-                      filter( !is.na( iso_o )) %>%    
-                      select( iso_o, iso_d, year, Id, newarrival, index0asylum )
+                      filter( !is.na( iso_o )) 
+
+country_newarrival$index0asylum[ country_newarrival$index0asylum < 1 ] <- 1
 
 
 #### merge data sets 
@@ -226,6 +227,11 @@ dat <- dat %>% group_by( ISO ) %>%
                        PR = impute.2020( PR )) %>% 
                ungroup() 
 
+# impute mean function 
+impute.mean <- function(x) replace( x, is.na(x), round( mean( x, na.rm = TRUE ), 0 ))
+dat <- dat %>% group_by( ISO ) %>% 
+               mutate( island = impute.mean( island ))
+
 #### create new variables
 dat <- within( dat, {
    # dummy variables
@@ -237,6 +243,8 @@ dat <- within( dat, {
 })
 
 dat <- as.data.frame( dat )
+
+dat <- read.csv( "../Data/WorkData/dat.csv" )
 
 #### imputation with Amelia
 # set seed 
@@ -253,7 +261,8 @@ impu <- amelia( dat, idvars = "Country", ts = "year", cs = "ISO",
                            "area", "best_est", "Nyear_conflict" ),
                 noms = c(  "dead", "Nyear_conf","typeOfViolence", 
                            "island", "landlocked" ),
-                bounds = bounds, p2s = 1 )
+                polytime = 1, leads = 2, bounds = bounds, 
+                parallel = "multicore", p2s = 1 )
 
 # round categorical variables to nearest value
 impu <- transform( impu, 
@@ -278,7 +287,7 @@ compare.density( impu, var = "dead_log" )
 # merging function 
 merge2 <- function( dat ){
 # create three dimensional array
-est_dat <- expand_grid( iso_o = unique( dat$ISO ), iso_d = unique( dat$ISO ), year = 2017:2024 ) %>% 
+est_dat <- expand_grid( iso_o = unique( dat$ISO ), iso_d = unique( dat$ISO ), year = 2000:2024 ) %>% 
            filter( iso_o != iso_d ) %>% 
            left_join( dat, by = c( "iso_o" = "ISO", "year" )) %>%
            left_join( dat, by = c( "iso_d" = "ISO", "year" ), suffix = c( "_o", "_d" )) %>% 
@@ -324,7 +333,7 @@ est_dat <- est_dat %>% group_by( Id ) %>%
 impu_clean <- lapply( impu_dat, cleanMean )
 
 #### generate training and predictive data sets 
-impu17 <- lapply( impu_clean, function(x) subset( x, year >= 2017 & year <= 2021 ))
+impu17 <- lapply( impu_clean, function(x) subset( x, year <= 2021 ))
 impu22 <- lapply( impu_clean, function(x) subset( x, year >= 2021 ))
 
 #### save data sets
@@ -354,8 +363,12 @@ data_vda$percVDA <- data_vda$new_displaced/data_flow_sum$total
 data_vda <- select( data_vda, -c( year, new_displaced, VDA ))
 
 #### correct problems with index0asylum 
-data_deci_o$index0asylum[ data_deci_o$iso_o == "VEN" & data_deci_o$iso_d == "COL" ] <- 1 
+EU <- c( "AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA", 
+         "DEU", "GRC", "HUN", "IRL", "ITA", "LVA", "LTU", "LUX", "MLT", "NLD", 
+         "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE" )
 
+data_deci_o$index0asylum[ data_deci_o$iso_o == "VEN" & data_deci_o$iso_d == "COL" ] <- 1 
+data_deci_o$index0asylum[ data_deci_o$iso_o == "UKR" & data_deci_o$iso_d %in% EU ] <- 1 
 
 #### merge data sets 
 # merge 

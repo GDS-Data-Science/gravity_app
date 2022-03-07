@@ -14,24 +14,37 @@ library( tidyr )
 
 ##### read in data
 load( "../Data/WorkData/stock_calc.Rdata" )
-load( "../Results/estimations.Rdata" )
+load( "../Results/estimations_poisson_join.Rdata" )
+#load( "../Results/estimations_poisson_ind.Rdata" )
 load( "../Data/WorkData/impuData22.Rdata" )
+load( "../Results/rmcl.Rdata" )
 
 ##### prediction of future flows
-impu22 <- lapply( impu22, 
-                  function( x ) filter( x, !( iso_o %in% c( "ABW", "UVK", "MHL", "PLW", "PRI" )) &
-                                           !( iso_d %in% c( "ATG", "BTN", "BRN", "CPV", "GNQ", "FSM", "MMR",
-                                                            "NRU", "ERI", "KIR", "UVK", "MAC", "MDV", "MHL", 
-                                                            "PRI", "WSM", "SMR", "STP", "SYC", "SLE", "SGP",
-                                                            "LCA", "TWN", "TLS", "TON", "TKM", "TUV", "UZB" ))))
+### remove missing clusters
+# ind
+# impu22 <- lapply( impu22,
+#                   function( x ) filter( x, !( iso_o %in% c( "ABW", "UVK", "MHL", "PLW", "PRI" )) &
+#                                            !( iso_d %in% c( "ATG", "BTN", "BRN", "CPV", "GNQ", "FSM", "MMR",
+#                                                             "NRU", "ERI", "KIR", "UVK", "MAC", "MDV", "MHL",
+#                                                             "PRI", "WSM", "SMR", "STP", "SYC", "SLE", "SGP",
+#                                                             "LCA", "TWN", "TLS", "TON", "TKM", "TUV", "UZB" ))))
+# join
+impu22 <- lapply( impu22, function( x ) filter( x, !( Id %in% rm_cl$Id )))
+
+
+### add cluster 2019
+for( i in 1:5 ){
+   impu22[[i]]$year <- 2019  
+}
 
 flow_predictions <- mapply( function( x, y ) 
                             predict( x, newdata = y, type = "response" ), 
-                            x = est_models, y = impu22 )
+                            x = est_models_poisson, y = impu22 )
+
 # round( rowMeans( flow_predictions ), 0 )
 pre_newarrival <- data.frame( iso_o = impu22[[1]]$iso_o, 
                               iso_d = impu22[[1]]$iso_d, 
-                              year = impu22[[1]]$year,
+                              year = rep( 2021:2024, times = nrow( flow_predictions)/4 ),
                               var = round( rowMeans( flow_predictions ), 0 ))
 
 
@@ -80,10 +93,14 @@ pred_stock <- dat_stock %>%
                       venezuelans_stocks = vda ) %>% 
               as.data.frame()
 
-save( pred_stock, file = "../results/predictedStocks.Rdata" )
+save( pred_stock, file = "../results/predictedStocks_Poisson_ind.Rdata" )
+save( pre_newarrival, file = "../results/predictedFlows_Poisson_ind.Rdata" )
 
+##### checks 
+check1 <- pre_newarrival %>% group_by( year ) %>% 
+                             summarise( tot = sum( var ))
 
-
-
+check2 <- pred_stock %>% group_by( year ) %>% 
+                         summarise( tot_ref = sum( refugee_stocks ), tot_asy = sum( asylum_stocks ))
 
 

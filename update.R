@@ -23,21 +23,17 @@ vda_new <- read_dta( "../Data/RawData/VDA2021.dta" )
 
 #### update data sets 
 ### flow data 
-flow_new <- flow_new %>% group_by( originiso, asylumiso, year ) %>% 
-                         summarise( newarrival = sum( count )) %>% 
-                         ungroup() %>%
-                         select( originiso, asylumiso, year, newarrival ) %>% 
-                         rename( iso_o = originiso, 
-                                 iso_d = asylumiso ) %>% 
-                         mutate( index0asylum = NA, 
-                                 Id = paste0( iso_o, iso_d )) %>% 
-                         filter( year == 2021 & iso_o != iso_d )
+flow <- flow_new %>% group_by( originiso, asylumiso, year ) %>% 
+                     summarise( newarrival = sum( count )) %>% 
+                     ungroup() %>%
+                     select( originiso, asylumiso, year, newarrival ) %>% 
+                     rename( iso_o = originiso, 
+                             iso_d = asylumiso ) %>% 
+                     mutate( Id = paste0( iso_o, iso_d )) %>% 
+                     filter( year %in% c( 2000:2021 ) & iso_o != iso_d ) %>% 
+                     left_join( flow_old, by = c( "iso_o", "iso_d", "year" ), suffix = c( "", ".y" )) %>% 
+                     select( -c( newarrival.y, Id.y ))
 
-flow <- flow_old %>% select( -c( Id )) %>% 
-                     mutate( Id = paste0( iso_o, iso_d )) %>%
-                     bind_rows( flow_new ) %>% 
-                     arrange( iso_o )
-            
 ### stock data 
 stock_new <- stock_new %>% 
              select( year, countryorigincode, countryasylumcode, ref, asy, vda ) %>% 
@@ -63,7 +59,9 @@ write_csv( flow, file = "../Data/RawData/flowdata.csv" )
 write_csv( stock, file = "../Data/RawData/stockdata.csv" )
 write_csv( vda, file = "../Data/RawData/vdadata.csv" )
 
+year_tots_flow_new <- flow %>% group_by( year ) %>% summarise( tot = sum( newarrival ))
+year_tots_stock_new <- stock %>% group_by( year ) %>% summarise( tot_ref = sum( ref ), tot_asy = sum( asy ))
 
-
-
+test <- list( year_tots_flow_new, year_tots_stock_new )
+save( test, file = "../Results/checks.Rdata" )
 
