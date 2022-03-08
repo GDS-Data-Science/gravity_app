@@ -28,7 +28,12 @@ impu22 <- lapply( impu22,
                                                             "NRU", "ERI", "KIR", "UVK", "MAC", "MDV", "MHL",
                                                             "PRI", "WSM", "SMR", "STP", "SYC", "SLE", "SGP", 
                                                             "LCA", "TWN", "TLS", "TON", "TKM", "TUV", "UZB" ))))
- 
+
+
+true_dat <- impu22[[1]] %>% 
+            filter( year == 2021 ) %>% 
+            select( iso_o, iso_d, year, newarrival )
+                              
 sum21 <- impu22[[1]] %>% group_by( iso_d, year ) %>% summarise( tot21 = sum( newarrival ))
 
 ### add cluster 2019
@@ -51,6 +56,9 @@ check1 <- pre_newarrival %>% group_by( year ) %>% summarise( tot = sum( var ))
 check2 <- pre_newarrival %>% group_by( iso_d, year ) %>% 
                              summarise( tot = sum( var )) %>% 
                              left_join( sum21, by = c( "iso_d", "year" ))
+check4 <- pre_newarrival %>% filter( year == 2021 ) %>% 
+                             left_join( true_dat, by = c( "iso_o", "iso_d", "year" )) %>% 
+                             summarise( mse = 1/nrow( pre_newarrival ) * sum(( var - newarrival )^2 ))
 
 
 ##### calculation of stock figures 
