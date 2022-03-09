@@ -311,7 +311,9 @@ ui <- navbarPage(
                                      have a certain amount of uncertainty." ), 
                            tags$li( "The predicted stock figures for your chosen country of asylum
                                      can be seen and downloaded as a .CSV file under tab 'Data Download'.")
-                        )),
+                        ), 
+                        p( "For a more comprehensive manual, please", 
+                           a( "click here.", target = "_blank", href = "simugravhowto.pdf" ))),
                    div( class = "text",
                         tags$h4( "Development and Maintenance" ),
                        "Data Science Team, Statistics and Demographics Section (SDS), GDS", tags$br(),

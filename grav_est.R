@@ -49,8 +49,8 @@ for( i in 1:5 ){
 est_models_poisson <- list( fennel1_1, fennel1_2, fennel1_3, fennel1_4, fennel1_5 )
 save(  est_models_poisson, file = "../Results/estimations_poisson_ind.Rdata" )
 
-est_models_nb <- list( fennel2_1, fennel2_2, fennel2_3, fennel2_4, fennel2_5 )
-save(  est_models_nb, file = "../Results/estimations_nb_ind.Rdata" )
+# est_models_nb <- list( fennel2_1, fennel2_2, fennel2_3, fennel2_4, fennel2_5 )
+# save(  est_models_nb, file = "../Results/estimations_nb_ind.Rdata" )
 
 
 
