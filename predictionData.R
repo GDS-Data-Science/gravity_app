@@ -206,7 +206,6 @@ dat <- country_population %>%
        left_join( country_conflict, by = c( "ISO" = "iso", "year" )) %>% 
        select( -c( Origin, country.x, country.y ))
 
-
 #### data cleaning 
 # replace missings with zeros 
 impute.zero <- function(x) replace( x, is.na(x), 0 )
@@ -346,11 +345,21 @@ stop()
 ################################################################################
 
 #### read in data 
-data_deci_o <- read_dta( "../Data/Rawdata/UNHCR_deci_posi_rate_o.dta" )
-data_deci_d <- read_dta( "../Data/Rawdata/UNHCR_deci_rate_d.dta" )
-data_vda <- read_csv( "../Data/Rawdata/vdadata.csv" )
-data_flow <- read_csv( "../Data/Rawdata/flowdata.csv" )
-data_stock <- read_csv( "../Data/Rawdata/stockdata.csv" )
+data_deci_o <- read_dta( "../Data/RawData/UNHCR_deci_posi_rate_o.dta" )
+data_deci_d <- read_dta( "../Data/RawData/UNHCR_deci_rate_d.dta" )
+data_vda <- read_csv( "../Data/RawData/vdadata.csv" )
+data_flow <- read_csv( "../Data/RawData/flowdata.csv" )
+data_stock <- read_dta( "../Data/RawData/stock_data_1951_2021_n.dta" )
+
+#### create stocks 21 
+data_stock <- data_stock %>% 
+              rename( iso_o = originiso, iso_d = asylumiso ) %>% 
+              filter( iso_o != iso_d & year == 2021 ) %>% 
+              select( iso_o, iso_d, year, ref, asy, vda )
+
+#### create flow 21 
+data_flow <- data_flow %>% 
+             filter( year == 2021 ) 
 
 #### create percVDA data
 data_vda <- subset( data_vda, year == 2021 )
@@ -374,10 +383,9 @@ data_deci_o$index0asylum[ data_deci_o$iso_o == "UKR" & data_deci_o$iso_d %in% EU
 # merge 
 dat_stock <- data_stock %>% 
              full_join( data_flow, by = c( "iso_o", "iso_d", "year" )) %>% 
-             select( -c( Id.x, Id.y, index0asylum )) %>% 
+             select( -c( Id, index0asylum, newarrival, Id )) %>% 
              filter( !is.na( iso_o ) & !is.na( iso_d )) %>% 
              replace( is.na(.), 0 ) %>% 
-             filter( year == 2021 ) %>% 
              group_by( iso_o, iso_d ) %>% 
              group_modify( ~ add_row( .x, year = 2022:2024 )) %>% 
              ungroup() %>% 
@@ -389,7 +397,8 @@ dat_stock <- data_stock %>%
                      deci_posi_rate_o = replace_na( deci_posi_rate_o, mean( deci_posi_rate_o, na.rm = TRUE )),
                      index0asylum = replace_na( index0asylum, round( mean( index0asylum, na.rm = TRUE ), 0 ))) %>%
              filter( iso_o != iso_d )
-             
+
+
 save( dat_stock, file = "../Data/WorkData/stock_calc.Rdata" )
 
 

@@ -29,7 +29,6 @@ impu22 <- lapply( impu22,
                                                             "PRI", "WSM", "SMR", "STP", "SYC", "SLE", "SGP", 
                                                             "LCA", "TWN", "TLS", "TON", "TKM", "TUV", "UZB" ))))
 
-
 true_dat <- impu22[[1]] %>% 
             filter( year == 2021 ) %>% 
             select( iso_o, iso_d, year, newarrival )
