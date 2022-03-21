@@ -298,7 +298,7 @@ est_dat <- expand_grid( iso_o = unique( dat$ISO ), iso_d = unique( dat$ISO ), ye
 }
 
 # merging loop
-impu_dat <- lapply( impu$imputations, merge2 )
+impu_dat <- lapply( impu$imputations, merge2 )     
 
 ### data cleaning and imputation 
 ## replace missings with mean values

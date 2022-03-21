@@ -51,9 +51,9 @@ pre_newarrival <- data.frame( iso_o = impu22[[1]]$iso_o,
                               var = round( rowMeans( flow_predictions ), 0 ))
 
 ##### checks
-check1 <- pre_newarrival %>% group_by( year ) %>% summarise( tot = sum( var ))
+check1 <- pre_newarrival %>% group_by( year ) %>% summarise( tot = sum( var, na.rm = TRUE ))
 check2 <- pre_newarrival %>% group_by( iso_d, year ) %>% 
-                             summarise( tot = sum( var )) %>% 
+                             summarise( tot = sum( var, na.rm = TRUE )) %>% 
                              left_join( sum21, by = c( "iso_d", "year" ))
 check4 <- pre_newarrival %>% filter( year == 2021 ) %>% 
                              left_join( true_dat, by = c( "iso_o", "iso_d", "year" )) %>% 

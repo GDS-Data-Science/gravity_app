@@ -242,14 +242,14 @@ ui <- navbarPage(
          
          tabPanel( "Data Download",
                    selectInput( "top3", "Choose ranking variable", 
-                                choices = c( "Refugee Stocks" = "refugee_stocks",
-                                             "Asylum Seeker Stocks" = "asylum_stocks" ),
+                                choices = c( "Refugee end-of-year" = "refugee_stocks",
+                                             "Asylum Seeker end-of-year" = "asylum_stocks" ),
                                 selected = "refugee_stocks" ),
                    verbatimTextOutput( "rawtable" ),
-                   h5( "Download stock data country of asylum" ),
+                   h5( "Download end-of-year data country of asylum" ),
                    downloadButton( "downloadCsvhost", "Download as CSV" ),
                    tags$br(), tags$br(), 
-                   h5( "Download all stock data" ),
+                   h5( "Download all end-of-year data" ),
                    downloadButton( "downloadCsv", "Download as CSV" ),
          ), # end tabPanel 'Data Download'
 
@@ -309,7 +309,8 @@ ui <- navbarPage(
                                      chosen modifications.
                                      Please bear in mind, that these are predictive values which 
                                      have a certain amount of uncertainty." ), 
-                           tags$li( "The predicted stock figures for your chosen country of asylum
+                           tags$li( "The predicted refugee and asylum end-of-year figures for your 
+                                     chosen country of asylum
                                      can be seen and downloaded as a .CSV file under tab 'Data Download'.")
                         ), 
                         p( "For a more comprehensive manual, please", 
@@ -541,7 +542,7 @@ server <- function( input, output, session ) {
       tmp_total <- iso_d_totals$total - sum( data_sankey_22$var ) 
       
       data_sankey_22 <- data_sankey_22 %>%
-         add_row( iso_o = "REST",
+         add_row( iso_o = "OTHER",
                   iso_d = iso_host(),
                   var =  tmp_total )
       
@@ -584,7 +585,7 @@ server <- function( input, output, session ) {
       tmp_total <- iso_d_totals$total - sum( data_sankey_23$var ) 
       
       data_sankey_23 <- data_sankey_23 %>%
-         add_row( iso_o = "REST",
+         add_row( iso_o = "OTHER",
                   iso_d = iso_host(),
                   var =  tmp_total )
       
@@ -627,7 +628,7 @@ server <- function( input, output, session ) {
       tmp_total <- iso_d_totals$total - sum( data_sankey_24$var ) 
       
       data_sankey_24 <- data_sankey_24 %>%
-                        add_row( iso_o = "REST",
+                        add_row( iso_o = "OTHER",
                                  iso_d = iso_host(),
                                  var =  tmp_total )
       
@@ -712,7 +713,7 @@ server <- function( input, output, session ) {
                            asylum_stocks = sum( asylum_stocks, na.rm = TRUE ), 
                            venezuelans_stocks = sum( venezuelans_stocks, na.rm = TRUE )) %>% 
                 ungroup() %>%
-                mutate( country_origin = "REST" ) %>% 
+                mutate( country_origin = "OTHER" ) %>% 
                 select( country_origin, country_asylum, year,
                         refugee_stocks, asylum_stocks, venezuelans_stocks ) 
       
