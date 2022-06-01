@@ -10,10 +10,11 @@
 #### load packages 
 library( Amelia )
 library( CountryRodes )
+library( dplyr )
 library( haven )
+library( purrr )
 library( readr )
 library( readxl )
-library( dplyr )
 library( tibble )
 library( tidyr )
 
@@ -29,6 +30,9 @@ country_cpi <- read_excel( "../Data/RawData/WEOOct2020all.xlsx", n_max = 8776  )
 country_geographics <- read_dta( "../Data/RawData/SPATIAL.dta" )
 country_conflict <- read_dta( "../Data/RawData/ged201.dta" )
 country_newarrival <- read_csv( "../Data/RawData/flowdata.csv" )
+
+dat_res <- read_csv( "../Data/WorkData/dat_check.csv" )
+dat_res[ , 1 ] <- NULL
 
 #### clean data sets 
 ## country_distances
@@ -241,9 +245,7 @@ dat <- within( dat, {
    Nyear_log <- ifelse( Nyear_conflict == 0, 0, log( Nyear_conflict ))
 })
 
-dat <- as.data.frame( dat )
-
-dat <- read.csv( "../Data/WorkData/dat.csv" )
+dat <- as.data.frame( map2_dfc( dat, dat_res, coalesce ))
 
 #### imputation with Amelia
 # set seed 
@@ -339,7 +341,7 @@ impu22 <- lapply( impu_clean, function(x) subset( x, year >= 2021 ))
 save( impu17, file = "../Data/WorkData/impuData17.Rdata" )
 save( impu22, file = "../Data/WorkData/impuData22.Rdata" )
 
-stop()
+#stop()
 ################################################################################
 ##                                stock data                                  ##
 ################################################################################
@@ -349,11 +351,10 @@ data_deci_o <- read_dta( "../Data/RawData/UNHCR_deci_posi_rate_o.dta" )
 data_deci_d <- read_dta( "../Data/RawData/UNHCR_deci_rate_d.dta" )
 data_vda <- read_csv( "../Data/RawData/vdadata.csv" )
 data_flow <- read_csv( "../Data/RawData/flowdata.csv" )
-data_stock <- read_dta( "../Data/RawData/stock_data_1951_2021_n.dta" )
+data_stock <- read_csv( "../Data/RawData/stockdata.csv" )
 
 #### create stocks 21 
 data_stock <- data_stock %>% 
-              rename( iso_o = originiso, iso_d = asylumiso ) %>% 
               filter( iso_o != iso_d & year == 2021 ) %>% 
               select( iso_o, iso_d, year, ref, asy, vda )
 
