@@ -8,6 +8,8 @@
 
 
 #### load packages
+library( caret )
+library( doParallel )
 library( dplyr )
 library( fastDummies )
 library( ggplot2 )
@@ -15,8 +17,10 @@ library( glmnet )
 library( hexbin )
 library( Metrics )
 library( purrr )
+library( ranger )
 library( readr )
 library( tidyr )
+library( xgboost )
 
 #### read in data
 load( "../Data/WorkData/impuData17.Rdata" )
@@ -96,6 +100,48 @@ ggplot( data = dat, mapping = aes( x = dist, y = log( newarrival ))) +
 
 
 ################################################################################
+################################################################################
+#                            Analysis with caret                               #
+################################################################################
+################################################################################
+
+################################################################################
+#                             Data Preparation                                 #
+################################################################################
+
+## change categorical variables into factors 
+cols_caret <- c( "iso_o", "iso_d", "year", "PR_o", "CL_o", "typeOfViolence_o", 
+                 "PR_d", "CL_d", "typeOfViolence_d", "island_o", "island_d", 
+                 "landlocked_o", "landlocked_d", "index0asylum", "contig",
+                 "comlang_off", "comlang_ethno", "colony", "comcol", "col45", "smctry" )
+dat[ cols_caret ] <- lapply( dat[ cols_caret ], factor )
+dat_caret <- dat 
+
+## create timeslice indices for CV with panel data 
+# block length
+t <- length( unique( dat_caret$year ))
+# number of cross-sectional observations
+n <- length( unique( dat_caret$Id ))
+# length of window and horizon
+window_length <- 12 
+horizon_length <- 1
+# add-on for block
+add_train <- sort( rep( seq( 0, n, by = t ), window_length ))
+add_test <- sort( rep( seq( 0, n, by = t ), horizon_length ))
+# generate y 
+y <- 1:t
+# create timeslice object 
+time_slice <- createTimeSlices( y, initialWindow = window_length, horizon = horizon_length )
+# length of list 
+list_length <- length( time_slice$train )
+# adjust for rest of the blocks
+for( i in 1:list_length ){
+   time_slice$train[[i]] <- rep( time_slice$train[[i]], n ) + add_train
+   time_slice$test[[i]] <- rep( time_slice$test[[i]], n ) + add_test
+}
+
+
+################################################################################
 #                              Data Preparation                                #
 ################################################################################
 
@@ -106,13 +152,12 @@ v <- t( replicate( 10, sample( 2000:2021, 2 )))
 
 # select variables from dat
 dat <- select( dat, -c( "Country_o", "Country_d", "Id" ))
-dat <- filter( dat, iso_o %in% c( "AFG", "ALB" ) & 
-                    iso_d %in% c( "DNK", "DJI", "DMA", "DOM", "ECU" ))
-# turn variables into factors 
+
+## create lasso data set 
+# create dummy variables
 cols <- c( "iso_d", "PR_o", "CL_o", "typeOfViolence_o", 
            "PR_d", "CL_d", "typeOfViolence_d" )
-# turn factors into dummy variables
-dat <- dummy_cols( dat, select_columns = cols, 
+dat_lasso <- dummy_cols( dat, select_columns = cols, 
                    remove_first_dummy = TRUE, remove_selected_columns = TRUE )
 
 
@@ -126,7 +171,7 @@ mse_round <- rep( NA, 10 )
 for( i in 1:10 ){
    
    # nest data frame by country of origin
-   dat_nest <- dat %>% 
+   dat_nest <- dat_lasso %>% 
                group_by( iso_o ) %>% 
                nest()
    
@@ -164,14 +209,72 @@ for( i in 1:10 ){
 
 mse_final <- mean( mse_round )
 
+## trial with caret 
+
+dat_nest <- dat %>% 
+            group_by( id ) %>% 
+            nest( )
+
+dat_m <- dat_nest %>% 
+         mutate( model = map( data, 
+                              ~ train( 
+                                 y ~ ., 
+                                 data = .x,
+                                 method = "glmnet",
+                                 family = "poisson",
+                                 tuneGrid = expand.grid( 
+                                                alpha = seq( 0, 1, by = 0.1 ), 
+                                                lambda = seq( 0, 25, by = 1 )),
+                                 trControl = trainControl( 
+                                    method = "cv", 
+                                    number = 10 ),
+                                 preProcess = c( "zv", "nzv", "scale", "center" ),
+                                 savePredictions = TRUE )))
 
 
+################################################################################
+#                                Random Forest                                 # 
+################################################################################
+
+## create cluster 
+cl <- makePSOCKcluster( 5 )
+registerDoParallel( cl )
+
+## random forest model
+model <- train( 
+             newarrival ~ ., 
+             tuneLength = 5, 
+             data = dat_rf, 
+             method = "ranger", 
+             trControl = trainControl(
+                              method = "timeslice", 
+                              initialWindow = 5,
+                              horizon = 2,
+                              allowParallel = TRUE,
+                              verboseIter = TRUE, 
+                              seeds = NULL
+             ),
+             metric = "RMSE"
+          )
+
+## stop cluster
+stopCluster( cl )
+             
+             
+################################################################################
+#                                  XG Boost                                    #
+################################################################################
+             
+
+### to do 
+# Adjust createTimeSlices function
+# Create a train/test control object for all estimations
+# program unnested LASSO
+# program unnested RF
+# run blog example XGboost
+# program unnested XGboost
+# program nested versions
 
 
-
-
-
-
-
-
-
+             
+             

@@ -369,8 +369,11 @@ data_flow_sum <- data_flow %>%
                  group_by( iso_d ) %>% 
                  summarise( total = sum( newarrival, na.rm = TRUE ))
 
-data_vda$percVDA <- data_vda$new_displaced/data_flow_sum$total 
-data_vda <- select( data_vda, -c( year, new_displaced, VDA ))
+data_vda <- data_vda %>% left_join( data_flow_sum, by = "iso_d" ) %>% 
+                         replace_na( list( total = 0 )) %>%  
+                         mutate( percVDA = new_displaced/total ) %>%
+                         select( -c( year, new_displaced, VDA, total )) %>% 
+                         replace_na( list( percVDA = 0 ))
 
 #### correct problems with index0asylum 
 EU <- c( "AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA", 
