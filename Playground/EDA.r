@@ -6,24 +6,6 @@
 ################################################################################
 ################################################################################
 
-
-#### load packages
-library( doParallel )
-library( dplyr )
-library( fastDummies )
-library( ggplot2 )
-library( glmnet )
-library( hexbin )
-library( Metrics )
-library( ranger )
-library( readr )
-library( tidyr )
-library( xgboost )
-
-#### read in data
-load( "../Data/WorkData/impuData17.Rdata" )
-dat <- impu17[[1]]
-
 ################################################################################
 #                                    EDA                                       #
 ################################################################################
@@ -99,97 +81,6 @@ ggplot( data = dat, mapping = aes( x = dist, y = log( newarrival ))) +
 
 
 
-
-################################################################################
-#                                LASSO model                                   #
-################################################################################
-
-mse_round <- rep( NA, 10 )
-
-## run cross validation glm.net
-for( i in 1:10 ){
-   
-   # nest data frame by country of origin
-   dat_nest <- dat_lasso %>% 
-               group_by( iso_o ) %>% 
-               nest()
-   
-   # generate training and testing data 
-   dat_tt <- dat_nest %>% 
-             mutate( train = map( data, ~ filter( .x, !( year %in% v[ i, ] ))), 
-                     test = map( data, ~filter( .x, year %in% v[ i, ]))) %>% 
-             mutate( train_x = map( train, ~ select( .x, -c( newarrival ))), 
-                     train_y = map( train, ~ select( .x, newarrival )), 
-                     test_x = map( test, ~ select( .x, -c( newarrival ))), 
-                     test_y = map( test, ~ select( .x, newarrival )))
-   
-   # estimate LASSO with training data 
-   fit <- dat_tt %>% 
-          mutate( model = map2( .x = train_x, .y = train_y,
-                                ~ cv.glmnet( as.matrix( .x ), as.matrix( .y ),
-                                             family = "poisson" )))
-   
-   # predict values for test data 
-   dat_p <- fit %>% 
-            mutate( p = map2( .x = model, .y = test_x, 
-                              ~ predict( .x, newx = as.matrix( .y ), 
-                                         type = "response", s = .x$lambda.min ))) 
-   
-   # calculate MSE 
-   dat_final <- dat_p %>% 
-                mutate( test_y = map( test_y, ~ as.numeric( .x$newarrival )),
-                        mse = map2( .x = test_y, .y = p, 
-                                    ~ rmse( as.numeric( .x ), .y ))) %>% 
-                unnest( mse )
-   
-   mse_round[i] <- mean( dat_final$mse )
-}
-
-
-mse_final <- mean( mse_round )
-
-################################################################################
-#                                Random Forest                                 # 
-################################################################################
-
-## create cluster 
-cl <- makePSOCKcluster( 5 )
-registerDoParallel( cl )
-
-## random forest model
-model <- train( 
-             newarrival ~ ., 
-             tuneLength = 5, 
-             data = dat_rf, 
-             method = "ranger", 
-             trControl = trainControl(
-                              method = "cv", 
-                              number = 5,
-                              allowParallel = TRUE,
-                              verboseIter = TRUE,
-                              seeds = NULL
-             ),
-             metric = "RMSE"
-          )
-
-## stop cluster
-stopCluster( cl )
-
-method = "timeslice", 
-initialWindow = 5,
-horizon = 1,
-             
-             
-################################################################################
-#                                  XG Boost                                    #
-################################################################################
-             
-
-### to do 
-# RF - try paralel computing 
-# RF - program parameter tuning
-# XGB - run example in blog
-# XGB - adapt example to case
 
 
              
