@@ -13,7 +13,7 @@ my_control <- trainControl(
                    verboseIter = TRUE, 
                    savePredictions = TRUE, 
                    index = time_slice, 
-                   parallel = TRUE )
+                   allowParallel = TRUE )
 
 ### run elastic net model
 el_net <- train( newarrival ~ ., 
