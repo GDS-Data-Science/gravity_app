@@ -26,7 +26,7 @@ el_net <- train( newarrival ~ .,
                  preProc = c( "center", "scale" ),
                  tuneGrid = expand.grid( .alpha = seq( .005, 1, length = 15 ),
                                          .lambda = c(( 1:5 )/10 )))
-
+el_net 
 
 
 
