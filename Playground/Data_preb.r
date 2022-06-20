@@ -9,7 +9,6 @@
 #### load packages 
 library( caret )
 library( dplyr )
-library( purrr )
 library( readr )
 library( tidyr )
 
