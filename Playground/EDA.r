@@ -1,14 +1,13 @@
 ################################################################################
 ################################################################################
 ##                                                                            ##
-##                       Playground for Gravity Model                         ##
+##                 Playground for Gravity Model - EDA                         ##
 ##                                                                            ##
 ################################################################################
 ################################################################################
 
 
 #### load packages
-library( caret )
 library( doParallel )
 library( dplyr )
 library( fastDummies )
@@ -16,7 +15,6 @@ library( ggplot2 )
 library( glmnet )
 library( hexbin )
 library( Metrics )
-library( purrr )
 library( ranger )
 library( readr )
 library( tidyr )
@@ -99,34 +97,8 @@ ggplot( data = dat, mapping = aes( x = dist, y = log( newarrival ))) +
    geom_boxplot( mapping = aes( group = cut_number( dist, 10 )))
 
 
-################################################################################
-#                              Data Preparation                                #
-################################################################################
 
-### year wise cross validation 
-set.seed( 42 )
-# create cv matrix
-v <- t( replicate( 10, sample( 2000:2021, 2 )))
 
-# select variables from dat
-dat <- select( dat, -c( "Country_o", "Country_d", "Id" ))
-
-## create lasso data set 
-# create dummy variables
-cols <- c( "iso_d", "PR_o", "CL_o", "typeOfViolence_o", 
-           "PR_d", "CL_d", "typeOfViolence_d" )
-dat_lasso <- dummy_cols( dat, select_columns = cols, 
-                   remove_first_dummy = TRUE, remove_selected_columns = TRUE )
-
-## create RF data set 
-cols_rf <- c( "iso_o", "iso_d", "year", "PR_o", "CL_o", "typeOfViolence_o", 
-              "PR_d", "CL_d", "typeOfViolence_d", "island_o", "island_d", 
-              "landlocked_o", "landlocked_d", "index0asylum", "contig",
-              "comlang_off", "comlang_ethno", "colony", "comcol", "col45", "smctry" )
-dat[ cols_rf ] <- lapply( dat[ cols_rf ], factor )
-dat_rf <- dat 
-
-stop()
 
 ################################################################################
 #                                LASSO model                                   #
