@@ -34,8 +34,13 @@ source( "Playground/Data_preb.r" )
 #### elastic net
 source( "Playground/ela_net.r" )
 
+#### random forest 
+source( "Playground/rand_forrest.r" )
 
+#### xgboost 
+source( "Playground/xgboost.r" )
 
+save.image()
 
 
 
