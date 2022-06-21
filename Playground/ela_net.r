@@ -7,20 +7,13 @@
 ################################################################################
 ################################################################################
 
-## create traincontrol function
-my_control <- trainControl( 
-                   classProbs = FALSE, 
-                   verboseIter = TRUE, 
-                   savePredictions = TRUE, 
-                   index = time_slice, 
-                   allowParallel = TRUE )
 
 ### run elastic net model
 el_net <- train( newarrival ~ ., 
                  data = dat, 
                  method = "glmnet",
                  family = "poisson",
-                 trControl = my_control,
+                 trControl = timecontrol,
                  metric = "RMSE",
                  preProc = c( "center", "scale" ),
                  tuneGrid = expand.grid( .alpha = seq( .005, 1, length = 15 ),
