@@ -7,11 +7,7 @@
 ################################################################################
 
 #### load packages
-library( alpaca )
-library( dplyr )
 library( fixest )
-library( readr )
-library( tidyr )
 
 
 #### read in data 
@@ -30,27 +26,14 @@ form <- formula(  newarrival ~
 
 ### loop through five imputed data sets 
 for( i in 1:5 ){
-   ## alpaca 
-   # poisson 
-   #assign( paste0( "lama1_", i ), feglm( formula = form, data = impu17[[i]], family = poisson( )))
-
-   # negative binomial
-   #assign( paste0( "lama2_", i ), feglm.nb( formula = form, data = impu17[[i]] ))
-
    ## FENmlm
    # poisson
    assign( paste0( "fennel1_", i ), femlm( form, data = impu17[[i]], family = "poisson" ))
-
-   # negative binomial
-   #assign( paste0( "fennel2_", i ), femlm( form, data = impu17[[i]], family = "negbin" ))
 }
 
 #### save results 
 est_models_poisson <- list( fennel1_1, fennel1_2, fennel1_3, fennel1_4, fennel1_5 )
-save(  est_models_poisson, file = "../Results/estimations_poisson_ind.Rdata" )
-
-# est_models_nb <- list( fennel2_1, fennel2_2, fennel2_3, fennel2_4, fennel2_5 )
-# save(  est_models_nb, file = "../Results/estimations_nb_ind.Rdata" )
+save(  est_models_poisson, file = "../Results/estimations.Rdata" )
 
 
 

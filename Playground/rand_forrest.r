@@ -48,9 +48,9 @@ registerDoParallel( cl )
 mod_res <- dat_nest %>% 
    mutate( iso_o_model = map( data,
                               ~ train( newarrival ~ ., 
-                                       data      = .x, 
-                                       method    = "ranger",
-                                       trControl = trainControl(
+                                       data       = .x, 
+                                       method     = "ranger",
+                                       trControl  = trainControl(
                                           method            = "timeslice",
                                           initialWindow     = window.length * length( unique( .x$Id )),
                                           horizon           = length( unique( .x$Id )),
@@ -59,8 +59,8 @@ mod_res <- dat_nest %>%
                                           fixedWindow       = TRUE,
                                           savePredictions   = "final",
                                           allowParallel     = TRUE ),
-                                       metric    = "RMSE",
-                                       tuneGrid  = t.grid,
+                                       metric     = "RMSE",
+                                       tuneGrid   = t.grid,
                                        num.trees  = 300,
                                        importance = "permutation" )))
 
