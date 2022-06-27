@@ -19,7 +19,7 @@ registerDoParallel( cl )
 
 ### all data 
 el_net <- train( newarrival ~ ., 
-                 data      = dat, 
+                 data      = dat_train, 
                  method    = "glmnet",
                  family    = "poisson",
                  trControl = timecontrol,

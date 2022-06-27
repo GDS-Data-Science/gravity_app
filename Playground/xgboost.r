@@ -25,7 +25,7 @@ registerDoParallel( cl )
 
 ### all data 
 xgboo  <- train( newarrival ~ ., 
-                 data       = dat, 
+                 data       = dat_train, 
                  method     = "xgbTree",
                  trControl  = timecontrol,
                  metric     = "RMSE",

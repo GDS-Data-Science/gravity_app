@@ -28,7 +28,6 @@ form <- formula(  newarrival ~
 # poisson
 fennel1_1 <- femlm( form, data = impu17[[i]], family = "poisson" )
 
-# zero inflated poisson 
 
 
 

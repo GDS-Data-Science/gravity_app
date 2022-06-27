@@ -21,7 +21,7 @@ registerDoParallel( cl )
 
 ### all data 
 ran_fo <- train( newarrival ~ ., 
-                 data       = dat, 
+                 data       = dat_train, 
                  method     = "ranger",
                  trControl  = timecontrol,
                  metric     = "RMSE",
