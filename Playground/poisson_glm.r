@@ -37,7 +37,7 @@ dat[ cols ] <- lapply( dat[ cols ], factor )
 #### create training and test data set 
 set.seed( 42 )
 ID <- unique( dat$Id )
-idx <- sample( ID, length( ID )*0.6 )
+idx <- sample( ID, length( ID ) * 0.2 )
 dat_train <- subset( dat, Id %in% idx )
 dat_test <- subset( dat, !( Id %in% idx ))
 
@@ -55,14 +55,36 @@ for( i in 1:16 ){
 ################################################################################
 
 #### standard poisson with penalty
-for( i in 1:9 ){
+for( i in 1:16 ){
 tmp <- subset( dat_train, year %in% train.list[[i]] )
 gm1 <- mixed_model( fixed = newarrival ~ ., random = ~ 1 | Id, data = tmp,
                     family = poisson(), penalized = TRUE )
 }
 
+#### zero-inflated poisson 
+for( i in 1:16 ){
+   tmp <- subset( dat_train, year %in% train.list[[i]] )
+   gm2 <- mixed_model( fixed = newarrival ~ ., random = ~ 1 | Id, data = tmp,
+                       family = zi.poisson(), 
+                       zi_fixed = ~ CPI_o + GDP_PP_o + GDP_PPP_o + area_o + 
+                                    PR_o + CL_o + typeOfViolence_o + Nyear_log_o + dead_o,
+                       zi_random = ~ 1 | Id,
+                       penalized = TRUE )
+}
 
 
+#### hurdle poisson 
+for( i in 1:16 ){
+   tmp <- subset( dat_train, year %in% train.list[[i]] )
+   gm3 <- mixed_model( fixed = newarrival ~ ., random = ~ 1 | Id, data = tmp,
+                       family = hurdle.poisson(), 
+                       zi_fixed = ~ CPI_o + GDP_PP_o + GDP_PPP_o + area_o + 
+                          PR_o + CL_o + typeOfViolence_o + Nyear_log_o + dead_o,
+                       penalized = TRUE )
+}
+
+
+save.image( file = "poisson.Rdata" )
 
 
 
