@@ -58,7 +58,7 @@ for( i in 1:11 ){
 
 #### standard poisson with penalty
 for( i in 1:16 ){
-   tmp <- subset( dat, year %in% train.list[[i]] )
+   tmp <- subset( dat2, year %in% train.list[[i]] )
    gm1 <- mixed_model( fixed = newarrival ~ ., random = ~ 1 | Id, data = tmp,
                        family = poisson(), penalized = TRUE )
 }

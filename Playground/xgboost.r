@@ -22,12 +22,20 @@ xgbGrid <- expand.grid(
 cl <- makePSOCKcluster( 5 )
 registerDoParallel( cl )
 
-
-### all data 
-xgboo  <- train( newarrival ~ ., 
-                 data       = dat_train, 
+### classification model
+xgboo  <- train( zero ~ ., 
+                 data       = dat_train_class, 
                  method     = "xgbTree",
-                 trControl  = timecontrol,
+                 trControl  = timecontrol_class,
+                 metric     = "ROC",
+                 preProc    = c("center", "scale"),
+                 tuneGrid   = xgbGrid )
+
+### regression model
+xgreg  <- train( newarrival ~ ., 
+                 data       = dat_train_reg, 
+                 method     = "xgbTree",
+                 trControl  = timecontrol_reg,
                  metric     = "RMSE",
                  preProc    = c("center", "scale"),
                  tuneGrid   = xgbGrid )
@@ -35,7 +43,9 @@ xgboo  <- train( newarrival ~ .,
 ## stop cluster
 stopCluster( cl )
 
-xgboo 
+xgboo
+
+xgreg 
 
 
 
