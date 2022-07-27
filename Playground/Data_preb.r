@@ -72,10 +72,14 @@ timecontrol_reg     <- trainControl(
 
 
 dat_train_class <- select( dat_train, zero, year, ends_with( "_o" ))
-dat_train_reg <- select( dat_train, -c( zero, Id ))
+dat_train_reg <- dat_train %>%
+                 filter( zero == "yes" ) %>%
+                 select( -c( zero, Id ))
 
 dat_test_class <- select( dat_test, zero, year, ends_with( "_o" ))
-dat_test_reg <- select( dat_test, -c( zero, Id ))
+dat_test_reg <-  dat_test %>%
+                 filter( zero == "yes" ) %>%
+                 select( -c( zero, Id ))
 
 
 

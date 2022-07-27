@@ -22,14 +22,14 @@ library( tidyr )
 library( xgboost )
 
 #### read in data
-load( "../../Data/WorkData/impuData17.Rdata" )
+load( "../Data/WorkData/impuData17.Rdata" )
 dat <- impu17[[1]]
 
 #### explorative data analysis 
 # source( "Playground/EDA.r" )
 
 #### data preparation
-source( "Data_preb.r" )
+source( "Playground/Data_preb.r", echo = TRUE )
 
 #### elastic net
 #source( "Playground/ela_net.r" )
@@ -38,7 +38,7 @@ source( "Data_preb.r" )
 #source( "Playground/rand_forrest.r" )
 
 #### xgboost 
-source( "xgboost.r" )
+source( "Playground/xgboost.r", echo = TRUE )
 
 save.image()
 
