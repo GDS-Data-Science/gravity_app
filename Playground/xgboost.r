@@ -27,7 +27,7 @@ xgboo  <- train( zero ~ .,
                  data       = dat_train_class, 
                  method     = "xgbTree",
                  trControl  = timecontrol_class,
-                 metric     = "ROC",
+                 metric     = "AUC",
                  preProc    = c("center", "scale"),
                  tuneGrid   = xgbGrid )
 
