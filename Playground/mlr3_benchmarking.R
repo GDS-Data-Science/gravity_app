@@ -25,14 +25,10 @@ plot(table(dat0$newarrival))
 sum(dat0$newarrival<1)
 sum(dat0$newarrival>1)
 
-# create arrivals categorical variable
-dat0_cat <- merge(dat0, 
-                  dat0 %>%
-                    group_by(iso_o, iso_d) %>%
-                    dplyr::summarise(total_arrivals = sum(newarrival)) %>%
-                    ungroup() %>%
-                    mutate( arrivals_cat = as.factor(ifelse(total_arrivals>0, 1, 0))),
-                  by = c("iso_o", "iso_d"))
+# Create arrivals categorical variable
+#
+dat0_cat <- dat0 %>%
+  mutate( arrivals_cat = as.factor(ifelse(newarrival>0, 1, 0)))
 
 # Subset dataset to only keep a few countries
 #dat1 <- subset( dat0_cat, iso_o %in% c( "LUX", "SYR", "LBN", "ATG", "CAN", "EGY" ))
@@ -50,7 +46,7 @@ dat <- dat0_cat %>% select( -c( "Country_o", "Country_d",
 
 dat <- dat %>%
   arrange(year) %>%
-  dplyr::select(-newarrival, -total_arrivals)
+  dplyr::select(-newarrival)
 
 #####################################
 #####################################
@@ -99,12 +95,20 @@ calculate_first_row <- function(year_n){
   calculate_last_row(year_n-1) +1
 }
 
-train_sets1 = list(seq(1,calculate_last_row(2017)),
-                   seq(calculate_first_row(2001), calculate_last_row(2018)),
-                   seq(calculate_first_row(2002), calculate_last_row(2019)),
-                   seq(calculate_first_row(2003), calculate_last_row(2020)))
+train_sets1 = list(seq(1,calculate_last_row(2013)),
+                   seq(calculate_first_row(2001), calculate_last_row(2014)),
+                   seq(calculate_first_row(2002), calculate_last_row(2015)),
+                   seq(calculate_first_row(2003), calculate_last_row(2016)),
+                   seq(calculate_first_row(2004), calculate_last_row(2017)),
+                   seq(calculate_first_row(2005), calculate_last_row(2018)),
+                   seq(calculate_first_row(2006), calculate_last_row(2019)),
+                   seq(calculate_first_row(2007), calculate_last_row(2020)))
 
-test_sets1 = list(seq(calculate_first_row(2018), calculate_last_row(2018)),
+test_sets1 = list(seq(calculate_first_row(2014), calculate_last_row(2014)),
+                  seq(calculate_first_row(2015), calculate_last_row(2015)),
+                  seq(calculate_first_row(2016), calculate_last_row(2016)),
+                  seq(calculate_first_row(2017), calculate_last_row(2017)),
+                  seq(calculate_first_row(2018), calculate_last_row(2018)),
                   seq(calculate_first_row(2019), calculate_last_row(2019)),
                   seq(calculate_first_row(2020), calculate_last_row(2020)),
                   seq(calculate_first_row(2021), calculate_last_row(2021)))
@@ -116,7 +120,7 @@ custom$instantiate(tsk_newarrival, train_sets=train_sets1, test_sets=test_sets1)
 
 design = benchmark_grid(
   tasks = tsk_newarrival,
-  learners = lrns(c("classif.glmnet", "classif.xgboost"),
+  learners = lrns(c("classif.glmnet", "classif.xgboost", "classif.ranger"),
                   predict_type = "response", predict_sets = c("train", "test")),
   resamplings = custom
 )
@@ -137,10 +141,12 @@ print(tab[, .(task_id, learner_id, acc_train, acc_test)])
 
 autoplot(bmr1) + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 
+as.data.table(bmr1$resample_results$resample_result)
+
 bmr_small = bmr1$clone(deep = TRUE)
 autoplot(bmr_small, type = "roc")
 
-save(bmr1, file="bmr_old_cat.RData")
+save(bmr1, file="bmr_cat_8resamp.RData")
 
 #################################
 #   1 -- Write mlr3 tasks
