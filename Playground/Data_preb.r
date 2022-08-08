@@ -34,7 +34,7 @@ dat_iso_o <- dat %>% select( -c( island_o, area_o, landlocked_o ))
 #                filter( tot == 0 )
 
 #dat$zero <- factor( ifelse( dat$Id %in% idx$Id, 0, 1 ), labels = c( "no", "yes" ))
-dat$zero <- factor( ifelse( dat$newarrival > 0, 1, 0 ), labels = c( "no", "yes"))
+dat$zero <- factor( ifelse( dat$newarrival == 0, 0, 1 ), labels = c( "no", "yes"))
 
 ### create training and testing data 
 set.seed( 42 )
@@ -56,7 +56,8 @@ timecontrol_class   <- trainControl(
    fixedWindow       = TRUE,
    savePredictions   = "final",
    allowParallel     = TRUE, 
-   classProbs        = TRUE 
+   classProbs        = TRUE, 
+   summaryFunction   = twoClassSummary
 )
 
 timecontrol_reg     <- trainControl(
@@ -72,8 +73,8 @@ timecontrol_reg     <- trainControl(
 )
 
 
-# dat_train_class <- select( dat_train, zero, year, ends_with( "_o" ))
-dat_train_class <- select( dat_train, -c( newarrival, Id ))
+dat_train_class <- select( dat_train, zero, year, ends_with( "_o" ))
+# dat_train_class <- select( dat_train, -c( newarrival, Id ))
 # dat_train_reg <- dat_train %>%
 #                  filter( zero == "yes" ) %>%
 #                  select( -c( zero, Id ))

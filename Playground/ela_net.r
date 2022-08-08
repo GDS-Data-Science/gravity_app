@@ -8,8 +8,8 @@
 ################################################################################
 
 ## tuning grid 
-t.grid <- expand.grid( .alpha = c( 0, 1 ),       #seq( .005, 1, length = 15 ),
-                       .lambda = c( .5, 1 ))             #c(( 1:5 )/10 ))
+t.grid <- expand.grid( .alpha = seq( 0, 1, by = 0.2 ),
+                       .lambda = seq( 0, 1, by = 0.15 ))  
 
 
 
@@ -19,9 +19,13 @@ el_net_class <- train( zero ~ .,
                        method    = "glmnet",
                        family    = "binomial",
                        trControl = timecontrol_class,
-                       metric    = "Accuracy",
+                       metric    = "ROC",
                        preProc   = c( "center", "scale" ),
                        tuneGrid  = t.grid )
+
+
+trellis.par.set( caretTheme())
+plot( el_net_class ) 
 
 
 ### all data 
