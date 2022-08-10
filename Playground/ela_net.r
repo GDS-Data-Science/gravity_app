@@ -8,13 +8,24 @@
 ################################################################################
 
 ## tuning grid 
-t.grid <- expand.grid( .alpha = seq( .005, 1, length = 15 ),
-                       .lambda = c(( 1:5 )/10 ))
+t.grid <- expand.grid( .alpha = seq( 0, 1, by = 0.2 ),
+                       .lambda = seq( 0, 1, by = 0.15 ))  
 
 
-## create cluster 
-cl <- makePSOCKcluster( 5 )
-registerDoParallel( cl )
+
+### all data 
+el_net_class <- train( zero ~ ., 
+                       data      = dat_train_class, 
+                       method    = "glmnet",
+                       family    = "binomial",
+                       trControl = timecontrol_class,
+                       metric    = "ROC",
+                       preProc   = c( "center", "scale" ),
+                       tuneGrid  = t.grid )
+
+
+trellis.par.set( caretTheme())
+plot( el_net_class ) 
 
 
 ### all data 
@@ -27,10 +38,14 @@ el_net <- train( newarrival ~ .,
                  preProc   = c( "center", "scale" ),
                  tuneGrid  = t.grid )
 
-## stop cluster
-stopCluster( cl )
-
-el_net 
+#### prediction test data 
+### classification model 
+# prediction
+dat_train_class$pred <- predict( el_net_class )
+dat_test_class$pred <- predict( el_net_class, newdata = dat_test_class )
+# confusion matrix 
+confusionMatrix( dat_train_class$pred, dat_train_class$zero )
+confusionMatrix( dat_test_class$pred, dat_test_class$zero )
 
 
 ### by country of origin 

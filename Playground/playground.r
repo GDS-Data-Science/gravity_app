@@ -26,19 +26,19 @@ load( "../Data/WorkData/impuData17.Rdata" )
 dat <- impu17[[1]]
 
 #### explorative data analysis 
-source( "Playground/EDA.r" )
+# source( "Playground/EDA.r" )
 
 #### data preparation
-source( "Playground/Data_preb.r" )
+source( "Playground/Data_preb.r", echo = TRUE )
 
 #### elastic net
-source( "Playground/ela_net.r" )
+#source( "Playground/ela_net.r" )
 
 #### random forest 
-source( "Playground/rand_forrest.r" )
+#source( "Playground/rand_forrest.r" )
 
 #### xgboost 
-source( "Playground/xgboost.r" )
+source( "Playground/xgboost.r", echo = TRUE )
 
 save.image()
 
