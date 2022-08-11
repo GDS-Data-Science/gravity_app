@@ -14,7 +14,8 @@
 dat <- dat %>% select( -c( "Country_o", "Country_d", 
                            "Nyear_log_o", "dead_log_o",
                            "Nyear_log_d", "dead_log_d", 
-                           "Nyear_conf_o", "Nyear_conf_d" )) %>% 
+                           "Nyear_conf_o", "Nyear_conf_d", 
+                           "CPI_o", "CPI_d" )) %>% 
                arrange( year )
 
 ### create factors 
@@ -34,7 +35,8 @@ dat_iso_o <- dat %>% select( -c( island_o, area_o, landlocked_o ))
 #                filter( tot == 0 )
 
 #dat$zero <- factor( ifelse( dat$Id %in% idx$Id, 0, 1 ), labels = c( "no", "yes" ))
-dat$zero <- factor( ifelse( dat$newarrival == 0, 0, 1 ), labels = c( "no", "yes"))
+dat$zero <- factor( ifelse( dat$newarrival > 0, 1, 0 ), labels = c( "no", "yes" ))
+dat$zero <- relevel( dat$zero, ref = "yes" )
 
 ### create training and testing data 
 set.seed( 42 )
@@ -56,8 +58,8 @@ timecontrol_class   <- trainControl(
    fixedWindow       = TRUE,
    savePredictions   = "final",
    allowParallel     = TRUE, 
-   classProbs        = TRUE, 
-   summaryFunction   = twoClassSummary
+   classProbs        = TRUE 
+   #summaryFunction   = twoClassSummary
 )
 
 timecontrol_reg     <- trainControl(
@@ -73,8 +75,8 @@ timecontrol_reg     <- trainControl(
 )
 
 
-dat_train_class <- select( dat_train, zero, year, ends_with( "_o" ))
-# dat_train_class <- select( dat_train, -c( newarrival, Id ))
+# dat_train_class <- select( dat_train, zero, year, ends_with( "_o" ))
+dat_train_class <- select( dat_train, -c( newarrival, Id ))
 # dat_train_reg <- dat_train %>%
 #                  filter( zero == "yes" ) %>%
 #                  select( -c( zero, Id ))

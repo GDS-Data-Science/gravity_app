@@ -8,8 +8,8 @@
 ################################################################################
 
 ## tuning grid 
-t.grid <- expand.grid( .alpha = seq( 0, 1, by = 0.2 ),
-                       .lambda = seq( 0, 1, by = 0.15 ))  
+t.grid <- expand.grid( .alpha = 0,                              #seq( 0, 1, by = 0.2 ),
+                       .lambda = 0.5 )                          #seq( 0, 1, by = 0.15 ))  
 
 
 
