@@ -10,9 +10,9 @@
 ## tuning grid
 # classification model
 t.grid_class <- expand.grid(
-                  mtry          = c( 2, 4, 6, 8, 10 ),
-                  splitrule     = c( "gini", "extratrees" ),
-                  min.node.size = c( 10, 20 ))
+                  mtry          = 4,                          #c( 2, 4, 6, 8, 10 ),
+                  splitrule     = "gini",                     #c( "gini", "extratrees" ),
+                  min.node.size = 20 )                        #c( 10, 20 ))
 
 # classification model
 t.grid_reg <- expand.grid(
@@ -30,7 +30,7 @@ ran_foclass <- train( zero ~ .,
                       data       = dat_train_class, 
                       method     = "ranger",
                       trControl  = timecontrol_class,
-                      metric     = "AUC",
+                      metric     = "ROC",
                       tuneGrid   = t.grid_class, 
                       num.trees  = 300,
                       importance = "permutation" )

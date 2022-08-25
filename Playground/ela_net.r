@@ -8,8 +8,8 @@
 ################################################################################
 
 ## tuning grid 
-t.grid <- expand.grid( .alpha = seq( 0, 1, by = 0.2 ),
-                       .lambda = seq( 0, 1, by = 0.15 ))  
+t.grid <- expand.grid( .alpha = 0,                              #seq( 0, 1, by = 0.2 ),
+                       .lambda = 0.5 )                          #seq( 0, 1, by = 0.15 ))  
 
 
 
@@ -30,13 +30,13 @@ plot( el_net_class )
 
 ### all data 
 el_net <- train( newarrival ~ ., 
-                 data      = dat_train, 
+                 data      = dat_train_reg, 
                  method    = "glmnet",
                  family    = "poisson",
-                 trControl = timecontrol,
+                 trControl = ctrl_reg,
                  metric    = "RMSE",
                  preProc   = c( "center", "scale" ),
-                 tuneGrid  = t.grid )
+                 tuneLength  = 3 )
 
 #### prediction test data 
 ### classification model 
@@ -47,6 +47,20 @@ dat_test_class$pred <- predict( el_net_class, newdata = dat_test_class )
 confusionMatrix( dat_train_class$pred, dat_train_class$zero )
 confusionMatrix( dat_test_class$pred, dat_test_class$zero )
 
+### regression model 
+dat_train_reg$pred <- round( predict( el_net ), 0 )
+dat_test_reg$pred <- round( predict( el_net, newdata = dat_test_reg ), 0 )
+rmse( dat_train_reg$newarrival, dat_train_reg$pred )
+rmse( dat_test_reg$newarrival, dat_test_reg$pred )
+
+dat_dis <- dat_train_reg %>% 
+           select( newarrival, pred ) %>% 
+           pivot_longer( cols = c( "newarrival", "pred" ), 
+                         names_to = "origin", 
+                         values_to = "val" )
+
+ggplot( dat_dis, aes( x = asinh( val ), fill = origin )) +
+   geom_density( alpha = .5 )
 
 ### by country of origin 
 ## nesting data 
