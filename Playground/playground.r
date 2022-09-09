@@ -21,6 +21,8 @@ library( pscl )
 library( purrr )
 library( ranger )
 library( readr )
+library( scales )
+library( solitude )
 library( tictoc )
 library( tidyr )
 library( xgboost )
@@ -48,4 +50,4 @@ source( "Playground/h2o.r", echo = TRUE )
 #### random forest 
 #source( "Playground/rand_forrest.r", echo = TRUE )
 
-
+save.image( "h2o.Rdata" )

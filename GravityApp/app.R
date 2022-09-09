@@ -11,7 +11,7 @@
 
 #============================== load packages ==================================
 
-library( chorddiag )
+#library( chorddiag )
 library( dplyr )
 library( fixest )
 library( haven )
@@ -151,8 +151,8 @@ ui <- navbarPage(
                                                  "Southern Africa" = o_s_africa, 
                                                  "West and Central Africa" = o_w_africa )), 
                               br(),
-                              sliderInput( "fatalO", "Total number of fatalities", 
-                                           min = 0, max = 500, value = 20, round = TRUE ),
+                              textInput( "fatalO", "Total number of fatalities", 
+                                          value = "" ),
                               br(),
                               sliderTextInput( "gdpO", "Percentage change in GDP per capita", 
                                                choices = c( -25, -15, -10, -7, -5, -4, -3, -2, -1.5, -1, -0.5, -0.25, 0, 
@@ -167,7 +167,7 @@ ui <- navbarPage(
                                                         "6 Unfree" = 6, 
                                                         "7 Very unfree" = 7 )), 
                                      
-                               selectInput( "polRO", "Political rights on 1-7 scale", 
+                              selectInput( "polRO", "Political rights on 1-7 scale", 
                                            choices = c( "1 Very free" = 1, 
                                                         "2 Free" = 2, 
                                                         "3 Less free" = 3, 
@@ -206,8 +206,8 @@ ui <- navbarPage(
                                                  "Southern Africa" = d_s_africa, 
                                                  "West and Central Africa" = d_w_africa )),
                               br(),
-                              sliderInput( "fatalH", "Total number of fatalities", 
-                                           min = 0, max = 100, value = 5, round = TRUE ),
+                              textInput( "fatalH", "Total number of fatalities", 
+                                          value = "" ),
                               br(),
                               sliderTextInput( "gdpH", "Percentage change in GDP per capita", 
                                                choices = c( -25, -15, -10, -7, -5, -4, -3, -2, -1.5, -1, -0.5, -0.25, 0, 
@@ -251,6 +251,9 @@ ui <- navbarPage(
                    tags$br(), tags$br(), 
                    h5( "Download all end-of-year data" ),
                    downloadButton( "downloadCsv", "Download as CSV" ),
+                   tags$br(), tags$br(),
+                   h5( "Download data on all new arrivals" ), 
+                   downloadButton( "downloadCsvflow", "Download as CSV" ),
          ), # end tabPanel 'Data Download'
 
 
@@ -320,7 +323,6 @@ ui <- navbarPage(
                        "Data Science Team, Statistics and Demographics Section (SDS), GDS", tags$br(),
                         tags$br(), tags$h4( "Contact" ),
                        "pellandr@unhcr.org", tags$br(),
-                       "huang@unhcr.org", tags$br(),
                        "hennings@unhcr.org", tags$br(),
                        "delpanta@unhcr.org", tags$br()),
                        
@@ -415,10 +417,7 @@ server <- function( input, output, session ) {
                         filter( iso_o == isoOrig() & year == input$year[1] ) %>%
                         select( best_est_o, CL_o, GDP_PP_o, PR_o ) %>% 
                         distinct()
-      updateSliderInput( inputId = "fatalO", 
-                         value = default_values$best_est_o, 
-                         max = ifelse(( default_values$best_est_o + default_values$best_est_o * 1.25 ) < 5000, 5000, 
-                                        round(( default_values$best_est_o + default_values$best_est_o * 1.25 )/1000 ) * 1000 ))
+      updateTextInput( inputId = "fatalO", value = default_values$best_est_o ) 
       updateSliderTextInput( session = session, inputId = "gdpO", 
                              label = paste0( "GDP per capita $", 
                                      round( default_values$GDP_PP_o, 0 ), 
@@ -433,10 +432,8 @@ server <- function( input, output, session ) {
                         filter( iso_d == isoHost() & year == input$year[1] ) %>%
                         select( best_est_d, CL_d, GDP_PP_d, PR_d ) %>% 
                         distinct()
-      updateSliderInput( inputId = "fatalH", 
-                         value = default_values$best_est_d, 
-                         max = ifelse(( default_values$best_est_d + default_values$best_est_d * 1.25 ) < 5000, 5000, 
-                                        round(( default_values$best_est_d + default_values$best_est_d * 1.25 )/1000 ) * 1000 ))
+      updateTextInput( inputId = "fatalH", 
+                       value = default_values$best_est_d )
       updateSliderTextInput( session = session, inputId = "gdpH", 
                              label = paste0( "GDP per capita $", 
                                              round( default_values$GDP_PP_d, 0 ), 
@@ -774,6 +771,17 @@ server <- function( input, output, session ) {
       }, 
       contentType = "text/csv"
       )
+   
+   ### download flow data   
+   output$downloadCsvflow <- downloadHandler(
+      filename = function() {
+         paste( "flow_data", ".csv", sep = "" )
+      },
+      content = function(file) {
+         write.csv( predictions(), file ) 
+      }, 
+      contentType = "text/csv"
+   )
    
    # disable the downdload button on page load
    #shinyjs::disable( "downloadCsvhost" )

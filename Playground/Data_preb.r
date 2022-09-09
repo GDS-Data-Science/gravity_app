@@ -39,6 +39,12 @@ dat_iso_o <- dat %>% select( -c( island_o, area_o, landlocked_o ))
 dat$zero <- factor( ifelse( dat$newarrival > 0, 1, 0 ), labels = c( "no", "yes" ))
 dat$zero <- relevel( dat$zero, ref = "yes" )
 
+### lagged variables
+dat <- dat %>% group_by( Id ) %>% 
+               mutate( newarrival_t1 = lag( newarrival, n = 1, default = NA ), 
+                       zero_t1 = lag( zero, n = 1, default = NA )) %>% 
+               ungroup() 
+               
 ### create training and testing data 
 set.seed( 42 )
 ID <- unique( dat$Id )
