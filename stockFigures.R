@@ -9,82 +9,110 @@
 ##### load packages 
 library( dplyr )
 library( fixest )
+library( ggplot2 )
+library( hrbrthemes )
+library( Metrics )
 library( readr )
 library( tidyr )
+library( viridis )
 
 ##### read in data
-load( "../Data/WorkData/stock_calc.Rdata" )
-load( "../Results/estimations_poisson_ind.Rdata" )
-load( "../Data/WorkData/impuData22.Rdata" )
-load( "../Data/WorkData/impuData17.Rdata" )
+# load stock data from script 'predictionData.r'
+load( "../Data/WorkData/stock_list_2023.Rdata" )
+# load estimation results from script 'grav_est.R'
+load( "../Results/estimations_2023.Rdata" )
+# load testing and training data from script 'grav_est.R'
+load( "../Data/Workdata/seq_dat.Rdata" )
 
 
-##### prediction of future flows
-### remove missing clusters
-# ind
-impu22 <- lapply( impu22,
-                  function( x ) filter( x, !( iso_o %in% c( "ABW", "UVK", "MHL", "PLW", "PRI" )) &
-                                           !( iso_d %in% c( "ATG", "BTN", "BRN", "CPV", "GNQ", "FSM", "MMR",
-                                                            "NRU", "ERI", "KIR", "UVK", "MAC", "MDV", "MHL",
-                                                            "PRI", "WSM", "SMR", "STP", "SYC", "SLE", "SGP", 
-                                                            "LCA", "TWN", "TLS", "TON", "TKM", "TUV", "UZB" ))))
+##### extract train and test data and rearrange nested list 
+years <- c( last_year-3, last_year-2, last_year-1, last_year )
+test_dat <- train_dat <- list( assign( paste0( "dat", years[1]), vector( mode = "list", length = 5 )), 
+                               assign( paste0( "dat", years[2]), vector( mode = "list", length = 5 )),
+                               assign( paste0( "dat", years[3]), vector( mode = "list", length = 5 )),
+                               assign( paste0( "dat", years[4]), vector( mode = "list", length = 5 )))
 
-true_dat <- impu22[[1]] %>% 
-            filter( year == 2021 ) %>% 
-            select( iso_o, iso_d, year, newarrival )
-                              
-sum21 <- impu22[[1]] %>% group_by( iso_d, year ) %>% summarise( tot21 = sum( newarrival ))
-
-### add cluster 2019
-for( i in 1:5 ){
-   impu22[[i]]$year <- 2019  
+# extract train data 
+for( i in 1:4 ){
+   for( j in 1:5 ){
+      train_dat[[i]][[j]] <- seq_dat[[j]]$train[[i]]
+   }
 }
 
-flow_predictions <- mapply( function( x, y ) 
-                            predict( x, newdata = y, type = "response" ), 
-                            x = est_models_poisson, y = impu22 )
+# extract test data
+for( i in 1:4 ){
+   for( j in 1:5 ){
+      test_dat[[i]][[j]] <- seq_dat[[j]]$test[[i]]
+   }
+}
 
-# round( rowMeans( flow_predictions ), 0 )
-pre_newarrival <- data.frame( iso_o = impu22[[1]]$iso_o, 
-                              iso_d = impu22[[1]]$iso_d, 
-                              year = rep( 2021:2024, times = nrow( flow_predictions)/4 ),
-                              var = round( rowMeans( flow_predictions ), 0 ))
+###### calculate future stocks
+t. <- c(( last_year - 4 ):( last_year - 1 )) 
 
-##### checks
-check1 <- pre_newarrival %>% group_by( year ) %>% summarise( tot = sum( var, na.rm = TRUE ))
-check2 <- pre_newarrival %>% group_by( iso_d, year ) %>% 
-                             summarise( tot = sum( var, na.rm = TRUE )) %>% 
-                             left_join( sum21, by = c( "iso_d", "year" ))
-check4 <- pre_newarrival %>% filter( year == 2021 ) %>% 
-                             left_join( true_dat, by = c( "iso_o", "iso_d", "year" )) %>% 
-                             summarise( mse = 1/nrow( pre_newarrival ) * sum(( var - newarrival )^2 ))
+pred_stock <- vector( mode = "list", length = 4 )
+pred_flow  <- vector( mode = "list", length = 4 )
 
+for( i in 1:4 ){
+##### prediction of future flows
+### add cluster of respective year
+for( j in 1:5 ){
+   test_dat[[i]][[j]]$index0asylum[ 
+         test_dat[[i]][[j]]$iso_o == "SDN" &
+         test_dat[[i]][[j]]$iso_d %in% c( "TCD", "SSD", "EGY" ) &
+         test_dat[[i]][[j]]$year == 2024 ] <- 1 
+   test_dat[[i]][[j]]$year <- t.[i]  
+}
+
+#### flow prediction
+flow_predictions <- matrix( NA, nrow = nrow( test_dat[[1]][[1]] ), ncol = 5 ) 
+for( j in 1:5 ){
+         ddd <<- train_dat[[i]][[j]]
+         x <- est_models_poisson[[i]][[j]]
+         x$call$data <- str2lang( "ddd" )
+         flow_predictions[ , j ] <- predict( x, newdata = test_dat[[i]][[j]], type = "response" )
+}
+rm( ddd, envir = globalenv())
+
+### round predictions to nearest integer
+pred_newarrival <- data.frame( iso_o = test_dat[[i]][[1]]$iso_o, 
+                               iso_d = test_dat[[i]][[1]]$iso_d, 
+                               year  = rep(( t.[i] + 2 ):( t.[i] + 3 ), 
+                                             times = nrow( flow_predictions )/2 ),
+                               var   = round( rowMeans( flow_predictions ), 0 ))
+
+pred_flow[[i]] <- pred_newarrival %>% 
+                  mutate( var = replace_na( var, 0 ))
 
 ##### calculation of stock figures 
-dat_stock <- dat_stock %>% 
-             left_join( pre_newarrival, by = c( "iso_o", "iso_d", "year" )) %>% 
-             filter( year %in% c( 2021:2024 )) %>% 
+dat_stock <- stock_list_2023[[i]] %>% 
+             filter( year != 2022 ) %>% 
+             left_join( pred_newarrival, by = c( "iso_o", "iso_d", "year" )) %>% 
+             filter( year %in% c( t.[[i]]+1:( t.[[i]] + 3 ))) %>% 
              rename( predarrival = var ) %>% 
              group_by( iso_o, iso_d ) %>% 
-             mutate( deci_rate_d = replace( deci_rate_d, is.na( deci_rate_d ), 0 ),
+             mutate( deci_rate_d      = replace( deci_rate_d, is.na( deci_rate_d ), 0 ),
                      deci_posi_rate_o = replace( deci_posi_rate_o, is.na( deci_posi_rate_o ), deci_rate_d ), 
-                     index0asylum = replace( index0asylum, is.na( index0asylum ), 0 ), 
-                     predarrival = replace_na( predarrival, 0 )) %>%
+                     index0asylum     = replace( index0asylum, is.na( index0asylum ), 0 ), 
+                     predarrival      = replace_na( predarrival, 0 )) %>%
              nest()
 
 # function to calculate new refugee, asylum seeker and vda stocks
 stock_calc <- function( df ){        
    within( df, {
-      for( i in 2:4 ){
+      for( j in 2:3 ){
          # refugees 
-         ref[i] <- round( ref[i-1] + predarrival[i] * index0asylum[i] +
-                             ( predarrival[i] * ( 1 - index0asylum[i]) * ( 1 - percVDA[i-1]) +
-                                  asy[i-1]) * deci_rate_d[i] * deci_posi_rate_o[i], 0 )
+         ref[j] <- round( ref[j-1] + 
+                          predarrival[j] * index0asylum[j] +
+                        ( predarrival[j] * ( 1 - index0asylum[j]) * ( 1 - percVDA[j-1]) +
+                          asy[j-1] ) *  deci_posi_rate_o[j] * deci_rate_d[j]
+                         , 0 )
          # asylum seekers 
-         asy[i] <- round( ( asy[i-1] + predarrival[i] * ( 1 - index0asylum[i]) * ( 1 - percVDA[i-1] )) *
-                             ( 1 - deci_rate_d[i]), 0 )
+         asy[j] <- round(( asy[j-1] + 
+                           predarrival[j] * ( 1 - index0asylum[j]) * 
+                              ( 1 - percVDA[j-1] )) * ( 1 - deci_rate_d[j])
+                         , 0 )
          # venezuelans
-         vda[i] <- round( vda[i-1] + predarrival[i] * percVDA[i-1], 0 )
+         vda[j] <- round( vda[j-1] + predarrival[j] * percVDA[j-1], 0 )
       }
    })
 }
@@ -94,22 +122,97 @@ dat_stock$data <- lapply( dat_stock$data, stock_calc )
 # unlist  
 dat_stock <- unnest( dat_stock, cols = c( data ))
 # select variables and rename 
-pred_stock <- dat_stock %>% 
-              select( iso_o, iso_d, year, ref, asy, vda ) %>% 
-              filter( iso_o != "UKN" ) %>%
-              mutate( vda = replace( vda, iso_o != "VEN", 0 )) %>% 
-              rename( country_origin = iso_o, 
-                      country_asylum = iso_d, 
-                      refugee_stocks = ref, 
-                      asylum_stocks = asy, 
-                      venezuelans_stocks = vda ) %>% 
-              as.data.frame()
+pred_stock[[i]] <- dat_stock %>% 
+                   select( iso_o, iso_d, year, ref, asy, vda ) %>% 
+                   filter( iso_o != "UKN" ) %>%
+                   mutate( vda = replace( vda, iso_o != "VEN", 0 )) %>% 
+                   rename( country_origin = iso_o, 
+                           country_asylum = iso_d, 
+                           refugee_stocks = ref, 
+                           asylum_stocks = asy, 
+                           venezuelans_stocks = vda ) %>% 
+                   distinct( country_origin, country_asylum, year, .keep_all = TRUE ) %>% 
+                   as.data.frame()
 
-save( pred_stock, file = "../results/predictedStocks_Poisson_ind.Rdata" )
-save( pre_newarrival, file = "../results/predictedFlows_Poisson_ind.Rdata" )
+}
 
+### write out predicted stocks 
+save( pred_stock, file = "../results/predictedStocks_Poisson_ind_2023.Rdata" )
+### write out predicted flows
+save( pred_flow, file = "../results/predictedFlows_Poisson_ind_2023.Rdata" )
+
+sub_flows_MENA <-  pred_flow[[4]] %>% 
+                   filter( iso_o %in% c( "TUN", "MAR", "LBY", "DZA", "EGY", "MRT" ) | 
+                           iso_d %in% c( "TUN", "MAR", "LBY", "DZA", "EGY", "MRT" )) %>% 
+                   filter( !is.na( var ))
+
+write_csv( sub_flows_MENA, file = "../Results/flows_MENA.csv" )
+
+sub_stocks_MENA <-  pred_stock[[4]] %>% 
+   filter( country_asylum %in% c( "TUN", "MAR", "LBY", "DZA", "EGY", "MRT" ) | 
+           country_origin %in% c( "TUN", "MAR", "LBY", "DZA", "EGY", "MRT" )) %>% 
+   filter( !is.na( refugee_stocks ))
+
+write_csv( sub_stocks_MENA, file = "../Results/stocks_MENA.csv" )
+
+
+################################################################################
 ##### checks 
-check3 <- pred_stock %>% group_by( year ) %>% 
-                         summarise( tot_ref = sum( refugee_stocks ), tot_asy = sum( asylum_stocks ))
+## rmse
+rmse( test_dat[[1]][[1]]$newarrival, pred_flow[[1]]$var )
+## rrse
+rrse( test_dat[[1]][[1]]$newarrival, pred_flow[[1]]$var )
+## mae
+mae( test_dat[[1]][[1]]$newarrival, pred_flow[[1]]$var )
+## smape
+smape( test_dat[[1]][[1]]$newarrival, pred_flow[[1]]$var )
+## rae
+rae( test_dat[[1]][[1]]$newarrival, pred_flow[[1]]$var )
+## msle
+msle( test_dat[[1]][[1]]$newarrival, pred_flow[[1]]$var )
+## bias
+bias( test_dat[[1]][[1]]$newarrival, pred_flow[[1]]$var )
 
-
+# ##### plots 
+# ## kernel density plot
+# pred <- pred_flow[[1]] 
+# pred$orig <- test_dat$dat_2019[[1]]$newarrival 
+# 
+# p1 <- pred  %>% 
+#       pivot_longer( cols = c( "var", "orig"), names_to = "source", values_to = "value" ) %>%
+#       ggplot( aes( x = log10( value ), group = source, fill = source )) +
+#       geom_density( adjust=1.5, alpha=.4 ) +
+#       ggtitle( "Kernel Density Plot True vs. Predicted") +
+#       theme_ipsum()
+#       
+# ## selected countries 
+# p2 <- pred %>% 
+#       filter( iso_o == "SYR" & iso_d == "TUR" ) %>% 
+#       mutate( pair_id = paste0( iso_o, " -> ", iso_d )) %>% 
+#       pivot_longer( cols = c( "var", "orig"), names_to = "source", values_to = "value" ) %>% 
+#       ggplot( aes( x = year, y = value, color = source )) +
+#       geom_line( size = 1.5 ) + 
+#       scale_x_continuous( breaks = c( 2019, 2020, 2021 )) +
+#       ggtitle( "Predicted vs. original: Syrians in Turkey" ) +
+#       theme_ipsum()
+# 
+# p3 <- pred %>% 
+#       filter( iso_o == "VEN" & iso_d == "COL" ) %>% 
+#       mutate( pair_id = paste0( iso_o, " -> ", iso_d )) %>% 
+#       pivot_longer( cols = c( "var", "orig"), names_to = "source", values_to = "value" ) %>% 
+#       ggplot( aes( x = year, y = value, color = source )) +
+#       geom_line( size = 1.5 ) + 
+#       scale_x_continuous( breaks = c( 2019, 2020, 2021 )) +
+#       ggtitle( "Predicted vs. original: Venezuelans in Columbia" ) +
+#       theme_ipsum()
+# 
+# p4 <- pred %>% 
+#       filter( iso_o == "ETH" & iso_d == "SUD" ) %>% 
+#       mutate( pair_id = paste0( iso_o, " -> ", iso_d )) %>% 
+#       pivot_longer( cols = c( "var", "orig"), names_to = "source", values_to = "value" ) %>% 
+#       ggplot( aes( x = year, y = value, color = source )) +
+#       geom_line( size = 1.5 ) + 
+#       scale_x_continuous( breaks = c( 2019, 2020, 2021 )) +
+#       ggtitle( "Predicted vs. original: Venezuelans in Columbia" ) +
+#       theme_ipsum()
+# 
